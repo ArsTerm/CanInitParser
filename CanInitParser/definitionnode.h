@@ -5,8 +5,7 @@
 #include <caninitlexer.h>
 
 namespace ciparser {
-class ExpressionNode;
-class FuncCallNode;
+class FuncDefNode;
 class DefinitionNode : public ParseNode {
 public:
     DefinitionNode() = delete;
@@ -14,30 +13,26 @@ public:
     DefinitionNode& operator=(DefinitionNode const&) = delete;
 
     DefinitionNode(
-            Token const& define,
-            Token const& id,
-            ExpressionNode* expr = nullptr)
+            Token const& define, Token const& id, ParseNode* expr = nullptr)
         : m_define(define), m_id(id), m_expr(expr)
     {
     }
 
-    DefinitionNode(Token&& define, Token&& id, ExpressionNode* expr = nullptr)
+    DefinitionNode(Token&& define, Token&& id, ParseNode* expr = nullptr)
         : m_define(std::move(define)), m_id(std::move(id)), m_expr(expr)
     {
     }
 
     DefinitionNode(
             Token const& define,
-            FuncCallNode* defNode,
-            ExpressionNode* expr = nullptr)
+            FuncDefNode* defNode,
+            ParseNode* expr = nullptr)
         : m_define(define), m_funcDef(defNode), m_expr(expr)
     {
     }
 
     DefinitionNode(
-            Token&& define,
-            FuncCallNode* defNode,
-            ExpressionNode* expr = nullptr)
+            Token&& define, FuncDefNode* defNode, ParseNode* expr = nullptr)
         : m_define(std::move(define)), m_funcDef(defNode), m_expr(expr)
     {
     }
@@ -52,12 +47,12 @@ public:
         return m_id;
     }
 
-    ExpressionNode const* expr() const
+    ParseNode* expr() const
     {
         return m_expr;
     }
 
-    FuncCallNode const* funcDef() const
+    FuncDefNode const* funcDef() const
     {
         return m_funcDef;
     }
@@ -65,12 +60,12 @@ public:
 private:
     Token m_define;
     Token m_id;
-    FuncCallNode* m_funcDef = nullptr;
-    ExpressionNode* m_expr;
+    FuncDefNode* m_funcDef = nullptr;
+    ParseNode* m_expr;
 
     // ParseNode interface
 public:
-    AbstractASTNode *accept(CanInitVisitor *) override;
+    AbstractASTNode* accept(CanInitVisitor*) override;
 };
 }
 

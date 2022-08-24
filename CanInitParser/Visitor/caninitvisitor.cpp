@@ -9,6 +9,7 @@
 #include "expressionnode.h"
 #include "funccallastnode.h"
 #include "funccallnode.h"
+#include "funcdefastnode.h"
 #include "idastnode.h"
 #include "idnode.h"
 #include "indexaccessastnode.h"
@@ -33,22 +34,22 @@ DefinitionASTNode* CanInitVisitor::visitDefinition(DefinitionNode const* n)
 {
     AbstractASTNode* type = nullptr;
     if (n->funcDef()) {
-        type = visitFuncCall(n->funcDef());
+        type = visitFuncDef(n->funcDef());
     } else if (n->id().type == CanInitLexer::Id) {
         IdNode tmp(n->id());
         type = visitId(&tmp);
     } else
         assert(false);
 
-    return new DefinitionASTNode(type, visitExpression(n->expr()));
+    return new DefinitionASTNode(type, n->expr()->accept(this));
 }
 
 BinExprASTNode* CanInitVisitor::visitBinExpr(BinExprNode const* n)
 {
     using TType = CanInitLexer::TokenType;
     using Op = BinExprASTNode::Operation;
-    auto lval = visitExpression(n->expr()[0]);
-    auto rval = visitExpression(n->expr()[1]);
+    auto lval = n->l()->accept(this);
+    auto rval = n->r()->accept(this);
     Op op;
     switch (n->delim().type) {
     case TType::And:
@@ -130,7 +131,7 @@ IdASTNode* CanInitVisitor::visitId(IdNode const* n)
 IndexAccessASTNode* CanInitVisitor::visitIndexAccess(IndexAccessNode const* n)
 {
     return new IndexAccessASTNode(
-            visitExpression(n->expression()), visitExpression(n->index()));
+            n->expression()->accept(this), n->index()->accept(this));
 }
 
 NumberASTNode* CanInitVisitor::visitNumber(NumberNode const* n)
@@ -141,6 +142,12 @@ NumberASTNode* CanInitVisitor::visitNumber(NumberNode const* n)
 StructAccessASTNode*
 CanInitVisitor::visitStructAccess(StructAccessNode const* n)
 {
-    return new StructAccessASTNode(
-            visitExpression(n->expr()), std::string(n->id().data));
+    return nullptr;
+    //    return new StructAccessASTNode(
+    //            n->expr()->accept(this), n->id()->accept(this));
+}
+
+FuncDefASTNode* CanInitVisitor::visitFuncDef(const FuncDefNode*)
+{
+    return nullptr;
 }

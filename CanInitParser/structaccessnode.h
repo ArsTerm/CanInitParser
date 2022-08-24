@@ -11,39 +11,27 @@ public:
     StructAccessNode(StructAccessNode const&) = delete;
     StructAccessNode& operator=(StructAccessNode const&) = delete;
 
-    StructAccessNode(ExpressionNode* expr, Token const& id, Token const& dot)
-        : m_expr(expr), m_id(id), m_dot(dot)
+    StructAccessNode(ParseNode* id, ParseNode* expr) : m_expr(expr), m_id(id)
     {
     }
 
-    StructAccessNode(ExpressionNode* expr, Token&& id, Token&& dot)
-        : m_expr(expr), m_id(std::move(id)), m_dot(std::move(dot))
-    {
-    }
-
-    Token const& id() const
+    ParseNode* id() const
     {
         return m_id;
     }
 
-    Token const& dot() const
-    {
-        return m_dot;
-    }
-
-    ExpressionNode const* expr() const
+    ParseNode* expr() const
     {
         return m_expr;
     }
 
 private:
-    ExpressionNode* m_expr;
-    Token m_id;
-    Token m_dot;
+    ParseNode* m_expr;
+    ParseNode* m_id;
 
     // ParseNode interface
 public:
-    AbstractASTNode *accept(CanInitVisitor *) override;
+    AbstractASTNode* accept(CanInitVisitor*) override;
 };
 }
 

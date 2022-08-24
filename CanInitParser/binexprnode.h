@@ -11,19 +11,24 @@ public:
     BinExprNode(BinExprNode const&) = delete;
     BinExprNode& operator=(BinExprNode const&) = delete;
 
-    BinExprNode(std::vector<ExpressionNode*> const& expr, Token const& delim)
-        : m_expr(expr), m_delim(delim)
+    BinExprNode(ParseNode* l, ParseNode* r, Token const& delim)
+        : m_l(l), m_r(r), m_delim(delim)
     {
     }
 
-    BinExprNode(std::vector<ExpressionNode*>&& expr, Token&& delim)
-        : m_expr(std::move(expr)), m_delim(std::move(delim))
+    BinExprNode(ParseNode* l, ParseNode* r, Token&& delim)
+        : m_l(l), m_r(r), m_delim(std::move(delim))
     {
     }
 
-    std::vector<ExpressionNode*> const& expr() const
+    ParseNode* l() const
     {
-        return m_expr;
+        return m_l;
+    }
+
+    ParseNode* r() const
+    {
+        return m_r;
     }
 
     Token const& delim() const
@@ -32,7 +37,8 @@ public:
     }
 
 private:
-    std::vector<ExpressionNode*> m_expr;
+    ParseNode* m_l;
+    ParseNode* m_r;
     Token m_delim;
 
     // ParseNode interface

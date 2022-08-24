@@ -17,6 +17,7 @@ SOURCES += \
     Visitor/definitionastnode.cpp \
     Visitor/expressionastnode.cpp \
     Visitor/funccallastnode.cpp \
+    Visitor/funcdefastnode.cpp \
     Visitor/idastnode.cpp \
     Visitor/indexaccessastnode.cpp \
     Visitor/numberastnode.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     definitionnode.cpp \
     expressionnode.cpp \
     funccallnode.cpp \
+    funcdefnode.cpp \
     idnode.cpp \
     indexaccessnode.cpp \
     numbernode.cpp \
@@ -43,6 +45,7 @@ HEADERS += \
     Visitor/definitionastnode.h \
     Visitor/expressionastnode.h \
     Visitor/funccallastnode.h \
+    Visitor/funcdefastnode.h \
     Visitor/idastnode.h \
     Visitor/indexaccessastnode.h \
     Visitor/numberastnode.h \
@@ -54,6 +57,7 @@ HEADERS += \
     definitionnode.h \
     expressionnode.h \
     funccallnode.h \
+    funcdefnode.h \
     idnode.h \
     indexaccessnode.h \
     numbernode.h \

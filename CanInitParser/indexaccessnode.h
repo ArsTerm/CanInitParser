@@ -4,24 +4,10 @@
 #include "parsenode.h"
 
 namespace ciparser {
-class ExpressionNode;
 class IndexAccessNode : public ParseNode {
 public:
-    IndexAccessNode(
-            ExpressionNode* expr,
-            ExpressionNode* idx,
-            Token const& ls,
-            Token const& rs)
-        : m_expression(expr), m_index(idx), m_LSquare(ls), m_RSquare(rs)
-    {
-    }
-
-    IndexAccessNode(
-            ExpressionNode* expr, ExpressionNode* idx, Token&& ls, Token&& rs)
-        : m_expression(expr),
-          m_index(idx),
-          m_LSquare(std::move(ls)),
-          m_RSquare(std::move(rs))
+    IndexAccessNode(ParseNode* expr, ParseNode* idx)
+        : m_expression(expr), m_index(idx)
     {
     }
 
@@ -29,35 +15,23 @@ public:
     IndexAccessNode(IndexAccessNode const&) = delete;
     IndexAccessNode& operator=(IndexAccessNode const&) = delete;
 
-    ExpressionNode const* expression() const
+    ParseNode* expression() const
     {
         return m_expression;
     }
 
-    ExpressionNode const* index() const
+    ParseNode* index() const
     {
         return m_index;
     }
 
-    Token const& LSquare() const
-    {
-        return m_LSquare;
-    }
-
-    Token const& RSquare() const
-    {
-        return m_RSquare;
-    }
-
 private:
-    ExpressionNode* m_expression = nullptr;
-    ExpressionNode* m_index = nullptr;
-    Token m_LSquare;
-    Token m_RSquare;
+    ParseNode* m_expression = nullptr;
+    ParseNode* m_index = nullptr;
 
     // ParseNode interface
 public:
-    AbstractASTNode *accept(CanInitVisitor *) override;
+    AbstractASTNode* accept(CanInitVisitor*) override;
 };
 }
 

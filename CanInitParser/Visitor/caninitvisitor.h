@@ -24,6 +24,8 @@ class IndexAccessNode;
 class NumberNode;
 class ParseNode;
 class StructAccessNode;
+class FuncDefNode;
+class FuncDefASTNode;
 
 class CANINITPARSER_EXPORT CanInitVisitor {
 public:
@@ -42,6 +44,7 @@ public:
     IndexAccessASTNode* visitIndexAccess(IndexAccessNode const*);
     NumberASTNode* visitNumber(NumberNode const*);
     StructAccessASTNode* visitStructAccess(StructAccessNode const*);
+    FuncDefASTNode* visitFuncDef(FuncDefNode const*);
 
 private:
     ParseNode* root;

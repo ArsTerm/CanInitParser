@@ -23,9 +23,7 @@ int main()
 
     // ciparser::CanInitLexer lexer(str, dataSize);
 
-    auto str
-            = "#define BIT2(x, offset) (((can_mes.can_mes_char[x][offset].b1) "
-              "& 0xFF))";
+    auto str = "#define BIT2(x, offset) a + b * c - d / 4";
     auto dataSize = strlen(str);
 
     ciparser::CanInitParser parser(

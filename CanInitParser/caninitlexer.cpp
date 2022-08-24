@@ -69,20 +69,73 @@ void CanInitLexer::tokenize()
         charPosInLine = 1;
         break;
     case '+':
-        token = generate(Plus, std::string_view(data, 1));
+        if (*(data + 1) == '+')
+            token = generate(Increment, std::string_view(data, 2));
+        else
+            token = generate(Plus, std::string_view(data, 1));
         break;
     case '-':
-        token = generate(Minus, std::string_view(data, 1));
+        if (*(data + 1) == '-')
+            token = generate(Decrement, std::string_view(data, 2));
+        else
+            token = generate(Minus, std::string_view(data, 1));
         break;
     case '&':
-        token = generate(And, std::string_view(data, 1));
+        if (*(data + 1) == '&')
+            token = generate(AndLogic, std::string_view(data, 2));
+        else
+            token = generate(And, std::string_view(data, 1));
         break;
     case '|':
-        token = generate(Or, std::string_view(data, 1));
+        if (*(data + 1) == '|')
+            token = generate(OrLogic, std::string_view(data, 2));
+        else
+            token = generate(Or, std::string_view(data, 1));
+        break;
+    case '^':
+        token = generate(Xor, std::string_view(data, 1));
         break;
     case '=':
-        token = generate(Equal, std::string_view(data, 1));
+        if (*(data + 1) == '=')
+            token = generate(Equal, std::string_view(data, 2));
+        else
+            token = generate(Assign, std::string_view(data, 1));
         break;
+    case '*':
+        token = generate(Asterisk, std::string_view(data, 1));
+        break;
+    case '!':
+        if (*(data + 1) == '=')
+            token = generate(NotEqual, std::string_view(data, 2));
+        else
+            token = generate(Exclamation, std::string_view(data, 1));
+        break;
+    case '~':
+        token = generate(Tilda, std::string_view(data, 1));
+        break;
+    case '%':
+        token = generate(Percent, std::string_view(data, 1));
+        break;
+    case '<': {
+        auto next = *(data + 1);
+        if (next == '=')
+            token = generate(LessOrEq, std::string_view(data, 2));
+        else if (next == '<')
+            token = generate(LShift, std::string_view(data, 2));
+        else
+            token = generate(LTriangle, std::string_view(data, 1));
+        break;
+    }
+    case '>': {
+        auto next = *(data + 1);
+        if (next == '=')
+            token = generate(MoreOrEq, std::string_view(data, 2));
+        else if (next == '>')
+            token = generate(RShift, std::string_view(data, 2));
+        else
+            token = generate(RTriangle, std::string_view(data, 1));
+        break;
+    }
     case ',':
         token = generate(Comma, std::string_view(data, 1));
         break;

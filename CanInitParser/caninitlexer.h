@@ -27,7 +27,24 @@ public:
         And,
         Or,
         Equal,
-        Comma
+        Assign,
+        Increment,
+        Decrement,
+        Asterisk,
+        Exclamation,
+        AndLogic,
+        OrLogic,
+        Xor,
+        NotEqual,
+        Tilda,
+        Percent,
+        Comma,
+        LTriangle,
+        RTriangle,
+        LessOrEq,
+        MoreOrEq,
+        LShift,
+        RShift,
     };
 
     static constexpr char const* typeToString(TokenType const& t)
@@ -55,6 +72,23 @@ public:
             TYPE_CASE(Or)
             TYPE_CASE(Equal)
             TYPE_CASE(Comma)
+            TYPE_CASE(Assign)
+            TYPE_CASE(Increment)
+            TYPE_CASE(Decrement)
+            TYPE_CASE(Asterisk)
+            TYPE_CASE(Exclamation)
+            TYPE_CASE(AndLogic)
+            TYPE_CASE(OrLogic)
+            TYPE_CASE(Xor)
+            TYPE_CASE(NotEqual)
+            TYPE_CASE(Tilda)
+            TYPE_CASE(Percent)
+            TYPE_CASE(LTriangle)
+            TYPE_CASE(RTriangle)
+            TYPE_CASE(LessOrEq)
+            TYPE_CASE(MoreOrEq)
+            TYPE_CASE(LShift)
+            TYPE_CASE(RShift)
         }
     }
 
@@ -79,6 +113,15 @@ public:
                 result += data;
 
             return result;
+        }
+        friend bool operator==(Token const& t1, Token const& t2)
+        {
+            return t1.type == t2.type && t1.charPosInLine == t2.charPosInLine
+                    && t1.line == t2.line;
+        }
+        friend bool operator!=(Token const& t1, Token const& t2)
+        {
+            return !(t1 == t2);
         }
     };
 
