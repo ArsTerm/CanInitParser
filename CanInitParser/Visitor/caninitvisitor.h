@@ -4,16 +4,6 @@
 #include "CanInitParser_global.h"
 
 namespace ciparser {
-class AbstractASTNode;
-class DefinitionASTNode;
-class BinExprASTNode;
-class CanInitASTNode;
-class ExpressionASTNode;
-class FuncCallASTNode;
-class IdASTNode;
-class IndexAccessASTNode;
-class NumberASTNode;
-class StructAccessASTNode;
 class DefinitionNode;
 class BinExprNode;
 class CanInitNode;
@@ -25,26 +15,22 @@ class NumberNode;
 class ParseNode;
 class StructAccessNode;
 class FuncDefNode;
-class FuncDefASTNode;
 
 class CANINITPARSER_EXPORT CanInitVisitor {
 public:
-    CanInitVisitor(ParseNode* root) : root(root)
-    {
-    }
+    CanInitVisitor(ParseNode* root);
 
-    AbstractASTNode* parse();
+    void parse();
 
-    DefinitionASTNode* visitDefinition(DefinitionNode const*);
-    BinExprASTNode* visitBinExpr(BinExprNode const*);
-    CanInitASTNode* visitCanInit(CanInitNode const*);
-    AbstractASTNode* visitExpression(ExpressionNode const*);
-    FuncCallASTNode* visitFuncCall(FuncCallNode const*);
-    IdASTNode* visitId(IdNode const*);
-    IndexAccessASTNode* visitIndexAccess(IndexAccessNode const*);
-    NumberASTNode* visitNumber(NumberNode const*);
-    StructAccessASTNode* visitStructAccess(StructAccessNode const*);
-    FuncDefASTNode* visitFuncDef(FuncDefNode const*);
+    void* visitDefinition(DefinitionNode const*);
+    void* visitBinExpr(BinExprNode const*);
+    void* visitCanInit(CanInitNode const*);
+    void* visitFuncCall(FuncCallNode const*);
+    void* visitId(IdNode const*);
+    void* visitIndexAccess(IndexAccessNode const*);
+    void* visitNumber(NumberNode const*);
+    void* visitStructAccess(StructAccessNode const*);
+    void* visitFuncDef(FuncDefNode const*);
 
 private:
     ParseNode* root;

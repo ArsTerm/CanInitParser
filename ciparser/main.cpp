@@ -1,8 +1,7 @@
-#include <Visitor/caninitastnode.h>
+#include <Parser/caninitnode.h>
+#include <Parser/caninitparser.h>
 #include <Visitor/caninitvisitor.h>
 #include <caninitlexer.h>
-#include <caninitnode.h>
-#include <caninitparser.h>
 #include <fstream>
 #include <iostream>
 #include <stdio.h>

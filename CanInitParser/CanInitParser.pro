@@ -10,59 +10,35 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Visitor/abstractastnode.cpp \
-    Visitor/binexprastnode.cpp \
-    Visitor/caninitastnode.cpp \
     Visitor/caninitvisitor.cpp \
-    Visitor/definitionastnode.cpp \
-    Visitor/expressionastnode.cpp \
-    Visitor/funccallastnode.cpp \
-    Visitor/funcdefastnode.cpp \
-    Visitor/idastnode.cpp \
-    Visitor/indexaccessastnode.cpp \
-    Visitor/numberastnode.cpp \
-    Visitor/structaccessastnode.cpp \
-    binexprnode.cpp \
+    Parser/binexprnode.cpp \
     caninitlexer.cpp \
-    caninitnode.cpp \
-    caninitparser.cpp \
-    definitionnode.cpp \
-    expressionnode.cpp \
-    funccallnode.cpp \
-    funcdefnode.cpp \
-    idnode.cpp \
-    indexaccessnode.cpp \
-    numbernode.cpp \
-    parsenode.cpp \
-    structaccessnode.cpp
+    Parser/caninitnode.cpp \
+    Parser/caninitparser.cpp \
+    Parser/definitionnode.cpp \
+    Parser/funccallnode.cpp \
+    Parser/funcdefnode.cpp \
+    Parser/idnode.cpp \
+    Parser/indexaccessnode.cpp \
+    Parser/numbernode.cpp \
+    Parser/parsenode.cpp \
+    Parser/structaccessnode.cpp
 
 HEADERS += \
     CanInitParser_global.h \
-    Visitor/abstractastnode.h \
-    Visitor/binexprastnode.h \
-    Visitor/caninitastnode.h \
     Visitor/caninitvisitor.h \
-    Visitor/definitionastnode.h \
-    Visitor/expressionastnode.h \
-    Visitor/funccallastnode.h \
-    Visitor/funcdefastnode.h \
-    Visitor/idastnode.h \
-    Visitor/indexaccessastnode.h \
-    Visitor/numberastnode.h \
-    Visitor/structaccessastnode.h \
-    binexprnode.h \
+    Parser/binexprnode.h \
     caninitlexer.h \
-    caninitnode.h \
-    caninitparser.h \
-    definitionnode.h \
-    expressionnode.h \
-    funccallnode.h \
-    funcdefnode.h \
-    idnode.h \
-    indexaccessnode.h \
-    numbernode.h \
-    parsenode.h \
-    structaccessnode.h
+    Parser/caninitnode.h \
+    Parser/caninitparser.h \
+    Parser/definitionnode.h \
+    Parser/funccallnode.h \
+    Parser/funcdefnode.h \
+    Parser/idnode.h \
+    Parser/indexaccessnode.h \
+    Parser/numbernode.h \
+    Parser/parsenode.h \
+    Parser/structaccessnode.h
 
 # Default rules for deployment.
 unix {

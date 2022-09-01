@@ -74,7 +74,7 @@ private:
     parse_p(Token const& operation, ParseNode* l, ParseNode* r);
     static ParseNode* parse_p(Token const& operation, ParseNode* n);
 
-    static /*constexpr*/ int operatorPriority(TType type, bool unary = false);
+    static constexpr int operatorPriority(TType type, bool unary = false);
 
     static bool isBeginExpression(TType t);
 

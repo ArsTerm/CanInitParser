@@ -10,25 +10,21 @@ public:
     NumberNode(NumberNode const&) = delete;
     NumberNode& operator=(NumberNode const&) = delete;
 
-    NumberNode(Token const& n) : m_number(n)
+    NumberNode(Token const& n) : m_number(n.data)
     {
     }
 
-    NumberNode(Token&& n) : m_number(std::move(n))
-    {
-    }
-
-    Token const& number() const
+    std::string const& number() const
     {
         return m_number;
     }
 
 private:
-    Token m_number;
+    std::string m_number;
 
     // ParseNode interface
 public:
-    AbstractASTNode *accept(CanInitVisitor *) override;
+    AbstractASTNode* accept(CanInitVisitor*) override;
 };
 }
 

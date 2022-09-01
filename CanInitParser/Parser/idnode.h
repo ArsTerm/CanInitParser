@@ -10,25 +10,21 @@ public:
     IdNode(IdNode const&) = delete;
     IdNode& operator=(IdNode const&) = delete;
 
-    IdNode(Token const& id) : m_id(id)
+    IdNode(Token const& id) : m_id(id.data)
     {
     }
 
-    IdNode(Token&& id) : m_id(std::move(id))
-    {
-    }
-
-    Token const& id() const
+    std::string const& id() const
     {
         return m_id;
     }
 
 private:
-    Token m_id;
+    std::string m_id;
 
     // ParseNode interface
 public:
-    AbstractASTNode *accept(CanInitVisitor *) override;
+    AbstractASTNode* accept(CanInitVisitor*) override;
 };
 }
 

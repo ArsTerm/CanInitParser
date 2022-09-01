@@ -3,7 +3,6 @@
 #include "caninitlexer.h"
 #include "caninitnode.h"
 #include "definitionnode.h"
-#include "expressionnode.h"
 #include "funccallnode.h"
 #include "funcdefnode.h"
 #include "idnode.h"
@@ -188,7 +187,7 @@ ParseNode* CanInitParser::parse_p(const Token& operation, ParseNode* n)
     }
 }
 
-/*constexpr*/ int CanInitParser::operatorPriority(TType type, bool unary)
+constexpr int CanInitParser::operatorPriority(TType type, bool unary)
 {
     switch (type) {
     case TType::Eof:
@@ -283,16 +282,17 @@ DefinitionNode* CanInitParser::parseDefinition()
     } _(t);
 
     auto def = std::move(t);
+    assert(def.type == TType::DefineKw);
     updateToken();
     if (isFunctionDefinition()) {
         auto f = parseFuncDef();
         auto expr = parseExpression();
-        return new DefinitionNode(std::move(def), f, expr);
+        return new DefinitionNode(f, expr);
     } else {
         auto id = std::move(t);
         updateToken();
         auto expr = parseExpression();
-        return new DefinitionNode(std::move(def), std::move(id), expr);
+        return new DefinitionNode(std::move(id), expr);
     }
 }
 
@@ -315,17 +315,16 @@ FuncDefNode* CanInitParser::parseFuncDef()
     auto id = std::move(t);
     updateToken();
     auto lp = std::move(t);
+    assert(lp.type == TType::LParen);
     updateToken();
-    std::vector<Token> params;
-    std::vector<Token> dots;
+    std::vector<std::string> params;
     while (true) {
         assert(t.type == TType::Id);
-        params.emplace_back(std::move(t));
+        params.emplace_back(std::move(t.data));
         updateToken();
         if (t.type == TType::RParen)
             break;
         assert(t.type == TType::Comma);
-        dots.emplace_back(std::move(t));
         updateToken();
     }
 
@@ -335,12 +334,7 @@ FuncDefNode* CanInitParser::parseFuncDef()
 
     updateToken();
 
-    return new FuncDefNode(
-            std::move(id),
-            std::move(params),
-            std::move(dots),
-            std::move(lp),
-            std::move(rp));
+    return new FuncDefNode(id, std::move(params));
 }
 
 ParseNode* CanInitParser::parseExpression()
@@ -444,9 +438,39 @@ ParseNode* CanInitParser::parseExpression()
             }
             updateToken();
             break;
-        case TType::Equal:
-            offloadStack(operatorPriority(t.type));
+        case TType::LTriangle:
+            offloadStack(operatorPriority(TType::LTriangle));
             stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::RTriangle:
+            offloadStack(operatorPriority(TType::RTriangle));
+            stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::LessOrEq:
+            offloadStack(operatorPriority(TType::LessOrEq));
+            stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::MoreOrEq:
+            offloadStack(operatorPriority(TType::MoreOrEq));
+            stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::NotEqual:
+            offloadStack(operatorPriority(TType::NotEqual));
+            stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::Equal:
+            offloadStack(operatorPriority(TType::Equal));
+            stackOperators.emplace(t, false);
+            updateToken();
+            break;
+        case TType::Exclamation:
+            offloadStack(operatorPriority(TType::Exclamation, true));
+            stackOperators.emplace(t, true);
             updateToken();
             break;
         case TType::RSquare:
@@ -462,6 +486,26 @@ ParseNode* CanInitParser::parseExpression()
             stackOperators.emplace(t, false);
             updateToken();
             break;
+        case TType::Increment: {
+            auto const& next = lexer->peek();
+            if (next.type == TType::Id
+                && next.charPosInLine == t.charPosInLine + t.data.size()) {
+                offloadStack(operatorPriority(TType::Increment, true));
+            } else
+                offloadStack(operatorPriority(TType::Increment, false));
+            stackOperators.emplace(t, true);
+            updateToken();
+        } break;
+        case TType::Decrement: {
+            auto const& next = lexer->peek();
+            if (next.type == TType::Id
+                && next.charPosInLine == t.charPosInLine + t.data.size()) {
+                offloadStack(operatorPriority(TType::Decrement, true));
+            } else
+                offloadStack(operatorPriority(TType::Decrement, false));
+            stackOperators.emplace(t, true);
+            updateToken();
+        } break;
         default:
             std::cerr << "Undefined expression token: " << std::string(t)
                       << '\n';

@@ -11,6 +11,7 @@ class AbstractASTNode;
 class CANINITPARSER_EXPORT ParseNode {
 public:
     using Token = CanInitLexer::Token;
+    using TType = CanInitLexer::TokenType;
 
     virtual AbstractASTNode* accept(CanInitVisitor*) = 0;
 
