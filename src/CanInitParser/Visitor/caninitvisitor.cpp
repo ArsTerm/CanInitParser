@@ -1,13 +1,13 @@
 #include "caninitvisitor.h"
-#include "Parser/binexprnode.h"
-#include "Parser/caninitnode.h"
-#include "Parser/definitionnode.h"
-#include "Parser/funccallnode.h"
-#include "Parser/idnode.h"
-#include "Parser/indexaccessnode.h"
-#include "Parser/numbernode.h"
-#include "Parser/parsenode.h"
-#include "Parser/structaccessnode.h"
+#include "../Parser/binexprnode.h"
+#include "../Parser/caninitnode.h"
+#include "../Parser/definitionnode.h"
+#include "../Parser/funccallnode.h"
+#include "../Parser/idnode.h"
+#include "../Parser/indexaccessnode.h"
+#include "../Parser/numbernode.h"
+#include "../Parser/parsenode.h"
+#include "../Parser/structaccessnode.h"
 #include <cassert>
 
 #include <typeinfo>

@@ -1,8 +1,8 @@
 #ifndef CANINITPARSER_H
 #define CANINITPARSER_H
 
-#include "CanInitParser_global.h"
-#include <caninitlexer.h>
+#include "../CanInitParser_global.h"
+#include "../caninitlexer.h"
 #include <cassert>
 #include <memory>
 #include <stack>
@@ -56,6 +56,9 @@ private:
     static void
     parseStack(std::stack<ParseNode*>& n, std::stack<OperationInfo>& op);
 
+    void offloadAll();
+    static void offloadAll(std::stack<ParseNode*>& n, std::stack<OperationInfo>& op);
+
     void offloadStack(int priority);
 
     static void offloadStack(
@@ -84,10 +87,10 @@ private:
 
     FuncDefNode* parseFuncDef();
 
-    ParseNode* parseExpression();
+    ParseNode* parseExpression(TType end = TType::Eof, TType end2 = TType::Eof);
     IdNode* parseId();
     NumberNode* parseNumber();
-    static FuncCallNode* parseFuncCall(ParseNode* n);
+    FuncCallNode* parseFuncCall();
     static BinExprNode*
     parseBinExpr(ParseNode* l, ParseNode* r, Token const& delim);
     static IndexAccessNode* parseIndexAccess(ParseNode* l, ParseNode* r);

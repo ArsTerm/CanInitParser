@@ -1,6 +1,6 @@
 #include "caninitparser.h"
 #include "binexprnode.h"
-#include "caninitlexer.h"
+#include "../caninitlexer.h"
 #include "caninitnode.h"
 #include "definitionnode.h"
 #include "funccallnode.h"
@@ -43,8 +43,8 @@ void CanInitParser::updateToken()
 void CanInitParser::pushBracket()
 {
     Token t;
-    t.type = TType::Eof;
-    stackOperators.push(OperationInfo(t));
+    t.type = TType::LParen;
+    stackOperators.push(OperationInfo(t, true));
 }
 
 void CanInitParser::parseStack()
@@ -70,11 +70,23 @@ void CanInitParser::parseStack(
     }
 }
 
+void CanInitParser::offloadAll()
+{
+    offloadAll(stackNodes, stackOperators);
+}
+
+void CanInitParser::offloadAll(std::stack<ParseNode *> &n, std::stack<OperationInfo> &op)
+{
+    while (op.size() > 0 && op.top().t.type != TType::Eof) {
+        parseStack(n, op);
+    }
+}
+
 void CanInitParser::offloadStack(int priority)
 {
     std::cerr << "Begin offload\n";
     offloadStack(stackNodes, stackOperators, priority);
-    std::cerr << "End offload\n"
+    std::cerr << "End offload"
               << ", node size: " << stackNodes.size() << '\n';
 }
 
@@ -85,7 +97,7 @@ void CanInitParser::offloadStack(
         return;
     std::cerr << "Operator on top: " << std::string(op.top().t)
               << ", node size: " << n.size() << '\n';
-    while (op.size() > 0 && op.top().t.type != TType::Eof
+    while (op.size() > 0 && op.top().t.type != TType::Eof && op.top().t.type != TType::LParen && op.top().t.type != TType::LSquare
            && operatorPriority(op.top().t.type, op.top().unary) <= priority) {
         parseStack(n, op);
     }
@@ -93,9 +105,9 @@ void CanInitParser::offloadStack(
 
 void CanInitParser::offloadBracket()
 {
-    while (stackOperators.size() > 0
-           && stackOperators.top().t.type != TType::Eof) {
-        parseStack();
+    offloadUntil(TType::LParen);
+    if (stackNodes.size() > 0) {
+        std::cerr << "Node:\n" << stackNodes.top()->toJson(0) << '\n';
     }
     stackOperators.pop();
 }
@@ -179,8 +191,6 @@ CanInitParser::parse_p(const Token& operation, ParseNode* l, ParseNode* r)
 ParseNode* CanInitParser::parse_p(const Token& operation, ParseNode* n)
 {
     switch (operation.type) {
-    case TType::LParen:
-        return parseFuncCall(n);
     default:
         assert(false);
         return nullptr;
@@ -291,6 +301,9 @@ DefinitionNode* CanInitParser::parseDefinition()
     } else {
         auto id = std::move(t);
         updateToken();
+        if (t.type == TType::LineFeed)
+            return new DefinitionNode(std::move(id));
+
         auto expr = parseExpression();
         return new DefinitionNode(std::move(id), expr);
     }
@@ -337,7 +350,7 @@ FuncDefNode* CanInitParser::parseFuncDef()
     return new FuncDefNode(id, std::move(params));
 }
 
-ParseNode* CanInitParser::parseExpression()
+ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
 {
     struct _Tmp {
         _Tmp(Token& t) : t(t)
@@ -353,7 +366,7 @@ ParseNode* CanInitParser::parseExpression()
         Token& t;
     } _(t);
 
-    while (t.type != TType::LineFeed && t.type != TType::Eof) {
+    while (t.type != TType::LineFeed && t.type != endToken && t.type != endToken2) {
         switch (t.type) {
         case TType::LParen: {
             pushBracket();
@@ -361,10 +374,11 @@ ParseNode* CanInitParser::parseExpression()
         } break;
         case TType::Id:
             if (lexer->peek().type == TType::LParen) {
-                stackNodes.push(parseId());
-                offloadStack(operatorPriority(TType::LParen));
-                stackOperators.emplace(t, false);
-                updateToken();
+                return parseFuncCall();
+//                stackNodes.push(parseId());
+//                offloadStack(operatorPriority(TType::LParen));
+//                stackOperators.emplace(t, false);
+//                updateToken();
             } else {
                 stackNodes.push(parseId());
             }
@@ -417,6 +431,7 @@ ParseNode* CanInitParser::parseExpression()
         case TType::OrLogic:
             offloadStack(operatorPriority(TType::OrLogic));
             stackOperators.emplace(t, false);
+            updateToken();
             break;
         case TType::Xor:
             offloadStack(operatorPriority(TType::Xor));
@@ -475,6 +490,7 @@ ParseNode* CanInitParser::parseExpression()
             break;
         case TType::RSquare:
             offloadUntil(TType::LSquare);
+            parseStack();
             updateToken();
             break;
         case TType::RParen:
@@ -513,11 +529,13 @@ ParseNode* CanInitParser::parseExpression()
             return nullptr;
         }
     }
-    if (stackNodes.size() != 1)
-        offloadStack(INT_MAX);
+    if (stackNodes.size() > 1)
+        offloadAll();
     std::cerr << "nodes size: " << stackNodes.size() << '\n';
     assert(stackNodes.size() == 1);
-    return stackNodes.top();
+    auto node = stackNodes.top();
+    stackNodes.pop();
+    return node;
 }
 
 NumberNode* CanInitParser::parseNumber()
@@ -530,9 +548,18 @@ NumberNode* CanInitParser::parseNumber()
     return new NumberNode(std::move(num));
 }
 
-FuncCallNode* CanInitParser::parseFuncCall(ParseNode* n)
+FuncCallNode* CanInitParser::parseFuncCall()
 {
-    return nullptr;
+    auto id = t;
+    updateToken();
+    updateToken();
+    std::vector<ParseNode*> args;
+    while (t.type != TType::RParen) {
+        args.emplace_back(parseExpression(TType::Comma, TType::RParen));
+    }
+    updateToken();
+    //assert(t.type == TType::LineFeed || t.type == TType::Eof);
+    return new FuncCallNode(std::move(id), std::move(args));
 }
 
 BinExprNode*

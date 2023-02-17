@@ -1,8 +1,8 @@
 #ifndef PARSENODE_H
 #define PARSENODE_H
 
-#include "CanInitParser_global.h"
-#include <caninitlexer.h>
+#include "../CanInitParser_global.h"
+#include "../caninitlexer.h"
 #include <vector>
 
 namespace ciparser {
@@ -13,12 +13,19 @@ public:
     using Token = CanInitLexer::Token;
     using TType = CanInitLexer::TokenType;
 
+    ParseNode();
+
     virtual AbstractASTNode* accept(CanInitVisitor*) = 0;
+    virtual std::string toJson(int spaces = 0) = 0;
 
     virtual ~ParseNode() = default;
 
 protected:
-    ParseNode();
+    void fillString(std::string& s, int spaces, char const* fill) {
+        for (int i = 0; i < spaces; i++) {
+            s += fill;
+        }
+    }
 };
 }
 #endif // PARSENODE_H

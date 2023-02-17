@@ -1,7 +1,7 @@
 #ifndef CANINITVISITOR_H
 #define CANINITVISITOR_H
 
-#include "CanInitParser_global.h"
+#include "../CanInitParser_global.h"
 
 namespace ciparser {
 class DefinitionNode;

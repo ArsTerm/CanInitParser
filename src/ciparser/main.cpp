@@ -10,20 +10,21 @@ using namespace std;
 
 int main()
 {
-    //    auto f = fopen("C:\\Projects\\CanInitParser\\CanInit.h", "r");
-    //    fseek(f, 0, SEEK_END);
-    //    auto dataSize = ftell(f);
-    //    fseek(f, 0, SEEK_SET);
+    auto file = "\\\\wsl.localhost\\Debian\\home\\gleb\\Programms\\Indicator-program\\src\\indicator-program\\can\\CanInit.h";
+    auto f = fopen(file, "r");
+        fseek(f, 0, SEEK_END);
+        auto dataSize = ftell(f);
+        fseek(f, 0, SEEK_SET);
 
-    //    auto str = new char[dataSize + 1];
-    //    str[dataSize] = '\0';
-    //    auto dsize = fread(str, 1, dataSize, f);
-    //    dataSize = dsize;
+        auto str = new char[dataSize + 1];
+        str[dataSize] = '\0';
+        auto dsize = fread(str, 1, dataSize, f);
+        dataSize = dsize;
 
     // ciparser::CanInitLexer lexer(str, dataSize);
 
-    auto str = "#define BIT2(x, offset) a + b * c - d / 4";
-    auto dataSize = strlen(str);
+//    auto str = "#define Door1_Open (((can_mes.can_mes_char[EDSC1_dr1][0] & 0x0F) == Dr_Open) || ((can_mes_can_mes_char[EDSC1_dr1][0] & 0x0F) == Dr_Open_))";
+//    auto dataSize = strlen(str);
 
     ciparser::CanInitParser parser(
             std::make_unique<ciparser::CanInitLexer>(str, dataSize));
@@ -31,10 +32,11 @@ int main()
     auto d = (ciparser::CanInitNode*)parser.parse();
 
     std::cout << "Tree root: " << d << std::endl;
+    std::cout << "Tree json:\n" << d->toJson(0);
 
-    ciparser::CanInitVisitor visitor(d);
+//    ciparser::CanInitVisitor visitor(d);
 
-    visitor.parse();
+//    visitor.parse();
     //    auto t = lexer.nextToken();
     //    while (t.type != ciparser::CanInitLexer::Eof) {
     //        std::cout << lexer.tokenToString(t) << std::endl;

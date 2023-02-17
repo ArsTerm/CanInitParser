@@ -2,7 +2,7 @@
 #define DEFINITIONNODE_H
 
 #include "parsenode.h"
-#include <caninitlexer.h>
+#include "../caninitlexer.h"
 
 namespace ciparser {
 class FuncDefNode;
@@ -45,6 +45,7 @@ private:
     // ParseNode interface
 public:
     AbstractASTNode* accept(CanInitVisitor*) override;
+    std::string toJson(int spaces) override;
 };
 }
 

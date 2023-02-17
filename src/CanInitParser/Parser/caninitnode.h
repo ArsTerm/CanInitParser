@@ -24,6 +24,7 @@ private:
     // ParseNode interface
 public:
     AbstractASTNode* accept(CanInitVisitor*) override;
+    std::string toJson(int spaces) override;
 };
 }
 

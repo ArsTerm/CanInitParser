@@ -1,7 +1,7 @@
 #ifndef FUNCDEFNODE_H
 #define FUNCDEFNODE_H
 
-#include "CanInitParser_global.h"
+#include "../CanInitParser_global.h"
 #include "parsenode.h"
 #include <vector>
 
@@ -36,6 +36,7 @@ private:
     // ParseNode interface
 public:
     AbstractASTNode* accept(CanInitVisitor*) override;
+    std::string toJson(int spaces) override;
 };
 }
 
