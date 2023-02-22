@@ -163,7 +163,7 @@ private:
 
     bool eof() const
     {
-        return currPos() == dataSize;
+        return currPos() >= dataSize;
     }
 
     void tokenize();

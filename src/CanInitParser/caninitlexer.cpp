@@ -63,6 +63,13 @@ void CanInitLexer::tokenize()
         charPosInLine++;
         tokenize();
         break;
+    case '\r':
+        if (*(data + 1) == '\n') {
+            token = generate(LineFeed, std::string_view(data, 2));
+            line++;
+            charPosInLine = 1;
+            break;
+        }
     case '\n':
         token = generate(LineFeed, std::string_view(data, 1));
         line++;
@@ -145,6 +152,11 @@ void CanInitLexer::tokenize()
         else if (isdigit(*data))
             tokenizeNumber();
         else {
+            char val = *data;
+            auto curr = currPos();
+            auto end = eof();
+            std::cerr << "Undefined value: " << val << " Position: " << curr
+                      << " eof: " << end << "\n";
             assert(false);
         }
     }

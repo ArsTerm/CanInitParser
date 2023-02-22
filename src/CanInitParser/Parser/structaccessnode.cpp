@@ -6,7 +6,7 @@ using ciparser::StructAccessNode;
 
 ciparser::AbstractASTNode* ciparser::StructAccessNode::accept(CanInitVisitor* v)
 {
-    return nullptr;//v->visitStructAccess(this);
+    return v->visitStructAccess(this);
 }
 
 std::string StructAccessNode::toJson(int spaces)

@@ -57,7 +57,8 @@ private:
     parseStack(std::stack<ParseNode*>& n, std::stack<OperationInfo>& op);
 
     void offloadAll();
-    static void offloadAll(std::stack<ParseNode*>& n, std::stack<OperationInfo>& op);
+    static void
+    offloadAll(std::stack<ParseNode*>& n, std::stack<OperationInfo>& op);
 
     void offloadStack(int priority);
 
@@ -66,7 +67,7 @@ private:
             std::stack<OperationInfo>& op,
             int priority);
 
-    void offloadBracket();
+    bool offloadBracket();
     static void offloadUntil(
             std::stack<ParseNode*>& n,
             std::stack<OperationInfo>& op,
@@ -87,7 +88,7 @@ private:
 
     FuncDefNode* parseFuncDef();
 
-    ParseNode* parseExpression(TType end = TType::Eof, TType end2 = TType::Eof);
+    ParseNode* parseExpression(TType end = TType::Eof);
     IdNode* parseId();
     NumberNode* parseNumber();
     FuncCallNode* parseFuncCall();

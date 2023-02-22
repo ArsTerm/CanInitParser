@@ -31,4 +31,8 @@ target_sources(${target_name} PRIVATE
          Parser/binexprnode.cpp
          Parser/binexprnode.h
          Visitor/caninitvisitor.cpp
-         Visitor/caninitvisitor.h)
+         Visitor/caninitvisitor.h
+         Visitor/abstractastnode.h
+         Visitor/abstractastnode.cpp
+         Visitor/value.h
+         Visitor/value.cpp)

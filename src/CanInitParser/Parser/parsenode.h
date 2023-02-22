@@ -8,6 +8,7 @@
 namespace ciparser {
 class CanInitVisitor;
 class AbstractASTNode;
+
 class CANINITPARSER_EXPORT ParseNode {
 public:
     using Token = CanInitLexer::Token;
@@ -21,7 +22,8 @@ public:
     virtual ~ParseNode() = default;
 
 protected:
-    void fillString(std::string& s, int spaces, char const* fill) {
+    void fillString(std::string& s, int spaces, char const* fill)
+    {
         for (int i = 0; i < spaces; i++) {
             s += fill;
         }

@@ -1,6 +1,6 @@
 #include "caninitparser.h"
-#include "binexprnode.h"
 #include "../caninitlexer.h"
+#include "binexprnode.h"
 #include "caninitnode.h"
 #include "definitionnode.h"
 #include "funccallnode.h"
@@ -75,7 +75,8 @@ void CanInitParser::offloadAll()
     offloadAll(stackNodes, stackOperators);
 }
 
-void CanInitParser::offloadAll(std::stack<ParseNode *> &n, std::stack<OperationInfo> &op)
+void CanInitParser::offloadAll(
+        std::stack<ParseNode*>& n, std::stack<OperationInfo>& op)
 {
     while (op.size() > 0 && op.top().t.type != TType::Eof) {
         parseStack(n, op);
@@ -97,25 +98,32 @@ void CanInitParser::offloadStack(
         return;
     std::cerr << "Operator on top: " << std::string(op.top().t)
               << ", node size: " << n.size() << '\n';
-    while (op.size() > 0 && op.top().t.type != TType::Eof && op.top().t.type != TType::LParen && op.top().t.type != TType::LSquare
+    while (op.size() > 0 && op.top().t.type != TType::Eof
+           && op.top().t.type != TType::LParen
+           && op.top().t.type != TType::LSquare
            && operatorPriority(op.top().t.type, op.top().unary) <= priority) {
         parseStack(n, op);
     }
 }
 
-void CanInitParser::offloadBracket()
+bool CanInitParser::offloadBracket()
 {
     offloadUntil(TType::LParen);
     if (stackNodes.size() > 0) {
         std::cerr << "Node:\n" << stackNodes.top()->toJson(0) << '\n';
     }
-    stackOperators.pop();
+    if (!stackOperators.empty()
+        && stackOperators.top().t.type == TType::LParen) {
+        stackOperators.pop();
+        return true;
+    }
+    return false;
 }
 
 void CanInitParser::offloadUntil(
         std::stack<ParseNode*>& n, std::stack<OperationInfo>& op, TType type)
 {
-    while (op.top().t.type != type) {
+    while (!op.empty() && op.top().t.type != type) {
         parseStack(n, op);
     }
 }
@@ -350,7 +358,7 @@ FuncDefNode* CanInitParser::parseFuncDef()
     return new FuncDefNode(id, std::move(params));
 }
 
-ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
+ParseNode* CanInitParser::parseExpression(TType endToken)
 {
     struct _Tmp {
         _Tmp(Token& t) : t(t)
@@ -366,7 +374,7 @@ ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
         Token& t;
     } _(t);
 
-    while (t.type != TType::LineFeed && t.type != endToken && t.type != endToken2) {
+    while (t.type != TType::LineFeed && t.type != endToken) {
         switch (t.type) {
         case TType::LParen: {
             pushBracket();
@@ -374,11 +382,12 @@ ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
         } break;
         case TType::Id:
             if (lexer->peek().type == TType::LParen) {
-                return parseFuncCall();
-//                stackNodes.push(parseId());
-//                offloadStack(operatorPriority(TType::LParen));
-//                stackOperators.emplace(t, false);
-//                updateToken();
+                stackNodes.push(parseFuncCall());
+                //                return parseFuncCall();
+                //                stackNodes.push(parseId());
+                //                offloadStack(operatorPriority(TType::LParen));
+                //                stackOperators.emplace(t, false);
+                //                updateToken();
             } else {
                 stackNodes.push(parseId());
             }
@@ -387,9 +396,7 @@ ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
             stackNodes.push(parseNumber());
             break;
         case TType::Dot:
-            std::cerr << "next token: " << std::string(t) << '\n';
             offloadStack(operatorPriority(TType::Dot));
-            std::cerr << "Offload end\n";
             stackOperators.emplace(t, false);
             updateToken();
             break;
@@ -494,7 +501,13 @@ ParseNode* CanInitParser::parseExpression(TType endToken, TType endToken2)
             updateToken();
             break;
         case TType::RParen:
-            offloadBracket();
+            if (!offloadBracket()) {
+                if (stackNodes.size() > 1)
+                    offloadAll();
+                auto node = stackNodes.top();
+                stackNodes.pop();
+                return node;
+            }
             updateToken();
             break;
         case TType::Comma:
@@ -554,11 +567,14 @@ FuncCallNode* CanInitParser::parseFuncCall()
     updateToken();
     updateToken();
     std::vector<ParseNode*> args;
-    while (t.type != TType::RParen) {
-        args.emplace_back(parseExpression(TType::Comma, TType::RParen));
+    while (true) {
+        args.emplace_back(parseExpression(TType::Comma));
+        if (t.type == TType::RParen)
+            break;
+        updateToken();
     }
     updateToken();
-    //assert(t.type == TType::LineFeed || t.type == TType::Eof);
+    // assert(t.type == TType::LineFeed || t.type == TType::Eof);
     return new FuncCallNode(std::move(id), std::move(args));
 }
 
@@ -575,7 +591,7 @@ IndexAccessNode* CanInitParser::parseIndexAccess(ParseNode* l, ParseNode* r)
 
 StructAccessNode* CanInitParser::parseStructAccess(ParseNode* l, ParseNode* r)
 {
-    return new StructAccessNode(l, r);
+    return new StructAccessNode(r, l);
 }
 
 IdNode* CanInitParser::parseId()
