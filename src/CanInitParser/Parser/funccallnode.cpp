@@ -1,10 +1,10 @@
 #include "funccallnode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/funccallastnode.h"
+#include "../Visitor/nodes/funccallastnode.h"
 
-ciparser::AbstractASTNode* ciparser::FuncCallNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::FuncCallNode::accept(CanInitVisitor* v)
 {
-    return nullptr;// v->visitFuncCall(this);
+    return v->visitFuncCall(this);
 }
 
 std::string ciparser::FuncCallNode::toJson(int spaces)

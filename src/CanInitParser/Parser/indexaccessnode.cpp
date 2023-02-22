@@ -1,12 +1,12 @@
 #include "indexaccessnode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/indexaccessastnode.h"
+#include "../Visitor/nodes/indexaccessastnode.h"
 
 using ciparser::IndexAccessNode;
 
-ciparser::AbstractASTNode* ciparser::IndexAccessNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::IndexAccessNode::accept(CanInitVisitor* v)
 {
-    return nullptr; // v->visitIndexAccess(this);
+    return v->visitIndexAccess(this);
 }
 
 std::string IndexAccessNode::toJson(int spaces)

@@ -1,10 +1,10 @@
 #include "caninitnode.h"
-//#include "Visitor/caninitastnode.h"
 #include "../Visitor/caninitvisitor.h"
+#include "../Visitor/nodes/caninitastnode.h"
 
-ciparser::AbstractASTNode* ciparser::CanInitNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::CanInitNode::accept(CanInitVisitor* v)
 {
-    return nullptr;//v->visitCanInit(this);
+    return v->visitCanInit(this);
 }
 
 std::string ciparser::CanInitNode::toJson(int spaces)

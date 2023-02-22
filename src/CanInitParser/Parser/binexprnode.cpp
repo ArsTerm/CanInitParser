@@ -1,11 +1,11 @@
 #include "binexprnode.h"
-//#include "Visitor/binexprastnode.h"
 #include "../Visitor/caninitvisitor.h"
+#include "../Visitor/nodes/binexprastnode.h"
 #include "../caninitlexer.h"
 
-ciparser::AbstractASTNode* ciparser::BinExprNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::BinExprNode::accept(CanInitVisitor* v)
 {
-    return nullptr;// v->visitBinExpr(this);
+    return v->visitBinExpr(this);
 }
 
 std::string ciparser::BinExprNode::toJson(int spaces)
@@ -15,7 +15,8 @@ std::string ciparser::BinExprNode::toJson(int spaces)
     result += "BinExpr {\n";
     spaces++;
     fillString(result, spaces, "    ");
-    result += std::string("operation: ") + CanInitLexer::typeToString((TType)m_op) + '\n';
+    result += std::string("operation: ")
+            + CanInitLexer::typeToString((TType)m_op) + '\n';
     fillString(result, spaces, "    ");
     result += "left:\n";
     result += m_l->toJson(spaces + 1);

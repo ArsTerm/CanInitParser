@@ -1,8 +1,8 @@
 #ifndef DEFINITIONNODE_H
 #define DEFINITIONNODE_H
 
-#include "parsenode.h"
 #include "../caninitlexer.h"
+#include "parsenode.h"
 
 namespace ciparser {
 class FuncDefNode;
@@ -32,7 +32,7 @@ public:
         return m_expr;
     }
 
-    FuncDefNode const* funcDef() const
+    FuncDefNode* funcDef() const
     {
         return m_funcDef;
     }
@@ -44,7 +44,7 @@ private:
 
     // ParseNode interface
 public:
-    AbstractASTNode* accept(CanInitVisitor*) override;
+    AstNode* accept(CanInitVisitor*) override;
     std::string toJson(int spaces) override;
 };
 }

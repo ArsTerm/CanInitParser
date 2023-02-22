@@ -1,12 +1,12 @@
 #include "idnode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/idastnode.h"
+#include "../Visitor/nodes/idastnode.h"
 
 using ciparser::IdNode;
 
-ciparser::AbstractASTNode* ciparser::IdNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::IdNode::accept(CanInitVisitor* v)
 {
-    return nullptr;// v->visitId(this);
+    return v->visitId(this);
 }
 
 std::string IdNode::toJson(int spaces)

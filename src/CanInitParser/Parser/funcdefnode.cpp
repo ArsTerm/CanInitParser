@@ -1,10 +1,12 @@
 #include "funcdefnode.h"
+#include "../Visitor/caninitvisitor.h"
+#include "../Visitor/nodes/funcdefastnode.h"
 
 using namespace ciparser;
 
-AbstractASTNode* ciparser::FuncDefNode::accept(CanInitVisitor*)
+AstNode* ciparser::FuncDefNode::accept(CanInitVisitor* visitor)
 {
-    return nullptr;
+    return visitor->visitFuncDef(this);
 }
 
 std::string FuncDefNode::toJson(int spaces)

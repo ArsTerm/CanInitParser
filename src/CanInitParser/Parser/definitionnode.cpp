@@ -1,13 +1,13 @@
 #include "definitionnode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/definitionastnode.h"
+#include "../Visitor/nodes/definitionastnode.h"
 #include "funcdefnode.h"
 
 using ciparser::DefinitionNode;
 
-ciparser::AbstractASTNode* ciparser::DefinitionNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::DefinitionNode::accept(CanInitVisitor* v)
 {
-    return nullptr;// v->visitDefinition(this);
+    return v->visitDefinition(this);
 }
 
 std::string DefinitionNode::toJson(int spaces)

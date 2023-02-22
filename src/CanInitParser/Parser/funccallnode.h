@@ -17,8 +17,10 @@ public:
     {
     }
 
-    FuncCallNode(Token&& id, std::vector<ParseNode*>&& args) : m_id(id.data), m_expr(std::move(args))
-    {}
+    FuncCallNode(Token&& id, std::vector<ParseNode*>&& args)
+        : m_id(id.data), m_expr(std::move(args))
+    {
+    }
 
     std::string const& id() const
     {
@@ -36,7 +38,7 @@ private:
 
     // ParseNode interface
 public:
-    AbstractASTNode* accept(CanInitVisitor*) override;
+    AstNode* accept(CanInitVisitor*) override;
     std::string toJson(int spaces) override;
 };
 }
