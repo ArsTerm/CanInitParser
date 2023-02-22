@@ -1,12 +1,12 @@
 #include "numbernode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/numberastnode.h"
+#include "../Visitor/nodes/numberastnode.h"
 
 using ciparser::NumberNode;
 
-ciparser::AbstractASTNode* ciparser::NumberNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::NumberNode::accept(CanInitVisitor* v)
 {
-    return nullptr;// v->visitNumber(this);
+    return v->visitNumber(this);
 }
 
 std::string NumberNode::toJson(int spaces)

@@ -7,8 +7,7 @@
 
 namespace ciparser {
 class CanInitVisitor;
-class AbstractASTNode;
-
+class AstNode;
 class CANINITPARSER_EXPORT ParseNode {
 public:
     using Token = CanInitLexer::Token;
@@ -16,7 +15,7 @@ public:
 
     ParseNode();
 
-    virtual AbstractASTNode* accept(CanInitVisitor*) = 0;
+    virtual AstNode* accept(CanInitVisitor*) = 0;
     virtual std::string toJson(int spaces = 0) = 0;
 
     virtual ~ParseNode() = default;

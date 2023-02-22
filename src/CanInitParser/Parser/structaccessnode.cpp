@@ -1,10 +1,10 @@
 #include "structaccessnode.h"
 #include "../Visitor/caninitvisitor.h"
-//#include "Visitor/structaccessastnode.h"
+#include "../Visitor/nodes/structaccessastnode.h"
 
 using ciparser::StructAccessNode;
 
-ciparser::AbstractASTNode* ciparser::StructAccessNode::accept(CanInitVisitor* v)
+ciparser::AstNode* ciparser::StructAccessNode::accept(CanInitVisitor* v)
 {
     return v->visitStructAccess(this);
 }

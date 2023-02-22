@@ -2,6 +2,10 @@
 #define CANINITVISITOR_H
 
 #include "../CanInitParser_global.h"
+#include "types/alias.h"
+#include "types/id.h"
+#include "types/message.h"
+#include "types/value.h"
 
 namespace ciparser {
 class DefinitionNode;
@@ -15,25 +19,39 @@ class NumberNode;
 class ParseNode;
 class StructAccessNode;
 class FuncDefNode;
+class AstNode;
+class BinExprAstNode;
+class CanInitAstNode;
+class DefinitionAstNode;
+class FuncCallAstNode;
+class FuncDefAstNode;
+class IdAstNode;
+class NumberAstNode;
+class StructAccessAstNode;
+class IndexAccessAstNode;
+class NumberAstNode;
 
 class CANINITPARSER_EXPORT CanInitVisitor {
 public:
-    CanInitVisitor(ParseNode* root);
+    CanInitVisitor();
 
-    void parse();
+    AstNode* visit(ParseNode*);
 
-    void* visitDefinition(DefinitionNode const*);
-    void* visitBinExpr(BinExprNode const*);
-    void* visitCanInit(CanInitNode const*);
-    void* visitFuncCall(FuncCallNode const*);
-    void* visitId(IdNode const*);
-    void* visitIndexAccess(IndexAccessNode const*);
-    void* visitNumber(NumberNode const*);
-    void* visitStructAccess(StructAccessNode const*);
-    void* visitFuncDef(FuncDefNode const*);
+    DefinitionAstNode* visitDefinition(DefinitionNode*);
+    BinExprAstNode* visitBinExpr(BinExprNode*);
+    CanInitAstNode* visitCanInit(CanInitNode*);
+    FuncCallAstNode* visitFuncCall(FuncCallNode*);
+    IdAstNode* visitId(IdNode*);
+    IndexAccessAstNode* visitIndexAccess(IndexAccessNode*);
+    NumberAstNode* visitNumber(NumberNode*);
+    StructAccessAstNode* visitStructAccess(StructAccessNode*);
+    FuncDefAstNode* visitFuncDef(FuncDefNode*);
 
 private:
-    ParseNode* root;
+    std::vector<Alias> aliases;
+    std::vector<Value> values;
+    std::vector<Message> messages;
+    Id::Set ids;
 };
 }
 
