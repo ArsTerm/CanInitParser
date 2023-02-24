@@ -1,6 +1,7 @@
 #include <Parser/caninitnode.h>
 #include <Parser/caninitparser.h>
 #include <Visitor/caninitvisitor.h>
+#include <Visitor/nodes/astnode.h>
 #include <caninitlexer.h>
 #include <fstream>
 #include <iostream>
@@ -25,8 +26,10 @@ int main()
     // ciparser::CanInitLexer lexer(str, dataSize);
 
     auto str
-            = "#define VAL 10"
-              "#define VAL2 VAL";
+            = "#define VAL 10\n"
+              "#define VAL2 VAL\n"
+              "#define VAL3 VAL + VAL2\n"
+              "#define Frn can_mes.can_mes_char[20][15]";
     auto dataSize = strlen(str);
 
     ciparser::CanInitParser parser(
@@ -37,7 +40,11 @@ int main()
     std::cout << "Tree root: " << d << std::endl;
     std::cout << "Tree json:\n" << d->toJson(0);
 
-    //    ciparser::CanInitVisitor visitor(d);
+    ciparser::CanInitVisitor visitor;
+
+    auto ast = visitor.visit(d);
+
+    std::cout << "\nAst count: " << ast->children().size() << '\n';
 
     //    visitor.parse();
     //    auto t = lexer.nextToken();

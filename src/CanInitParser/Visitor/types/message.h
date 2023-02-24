@@ -28,22 +28,22 @@ public:
         return m_bit;
     }
 
-    static Message bitMessage(int messId, int offset, int bit)
+    static Message* bitMessage(int messId, int offset, int bit)
     {
-        Message mess;
-        mess.m_type = Bit;
-        mess.m_messId = messId;
-        mess.m_offset = offset;
-        mess.m_bit = bit;
+        Message* mess = new Message;
+        mess->m_type = Bit;
+        mess->m_messId = messId;
+        mess->m_offset = offset;
+        mess->m_bit = bit;
         return mess;
     }
 
-    static Message intMessage(Type type, int messId, int offset)
+    static Message* intMessage(Type type, int messId, int offset)
     {
-        Message mess;
-        mess.m_type = type;
-        mess.m_messId = messId;
-        mess.m_offset = offset;
+        Message* mess = new Message;
+        mess->m_type = type;
+        mess->m_messId = messId;
+        mess->m_offset = offset;
         return mess;
     }
 

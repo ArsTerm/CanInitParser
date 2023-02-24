@@ -30,6 +30,7 @@ class NumberAstNode;
 class StructAccessAstNode;
 class IndexAccessAstNode;
 class NumberAstNode;
+class Message;
 
 class CANINITPARSER_EXPORT CanInitVisitor {
 public:
@@ -52,6 +53,9 @@ private:
     std::vector<Value> values;
     std::vector<Message> messages;
     Id::Set ids;
+
+    Message* parseMessage(StructAccessAstNode*);
+    Message* parseMessage(IndexAccessAstNode*);
 };
 }
 

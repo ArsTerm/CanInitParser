@@ -53,6 +53,10 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
         } else if (auto node = dynamic_cast<NumberAstNode*>(expr)) {
             auto value = new Value(id, new NumberExpr(node->value()));
             ids.emplace(id, value);
+        } else if (auto node = dynamic_cast<StructAccessAstNode*>(expr)) {
+            ids.emplace(id, parseMessage(node));
+        } else if (auto node = dynamic_cast<IndexAccessAstNode*>(expr)) {
+            ids.emplace(id, parseMessage(node));
         } else {
             assert(false);
         }
@@ -132,6 +136,12 @@ CanInitAstNode* CanInitVisitor::visitCanInit(CanInitNode* n)
         node->appendChild(child->accept(this));
     }
 
+    for (auto& id : ids) {
+        if (auto value = dynamic_cast<Value*>(id.second)) {
+            value->expr()->linkId(ids);
+        }
+    }
+
     return node;
 }
 
@@ -145,9 +155,22 @@ IdAstNode* CanInitVisitor::visitId(IdNode* n)
     return new IdAstNode(n->id());
 }
 
-IndexAccessAstNode* CanInitVisitor::visitIndexAccess(IndexAccessNode*)
+IndexAccessAstNode* CanInitVisitor::visitIndexAccess(IndexAccessNode* n)
 {
-    return nullptr;
+    auto idxNode = n->index()->accept(this);
+    auto object = n->expression()->accept(this);
+    Expr* idx;
+
+    if (auto node = dynamic_cast<BinExprAstNode*>(idxNode)) {
+        idx = node->expr();
+    } else if (auto node = dynamic_cast<NumberAstNode*>(idxNode)) {
+        idx = new NumberExpr(node->value());
+    } else if (auto node = dynamic_cast<IdAstNode*>(idxNode)) {
+        idx = new IdExpr(new Alias("", node->getName()));
+    } else {
+        assert(false);
+    }
+    return new IndexAccessAstNode(object, idx);
 }
 
 NumberAstNode* CanInitVisitor::visitNumber(NumberNode* n)
@@ -155,12 +178,87 @@ NumberAstNode* CanInitVisitor::visitNumber(NumberNode* n)
     return new NumberAstNode(std::stoi(n->number()));
 }
 
-StructAccessAstNode* CanInitVisitor::visitStructAccess(StructAccessNode*)
+StructAccessAstNode* CanInitVisitor::visitStructAccess(StructAccessNode* n)
 {
-    return nullptr;
+    auto object = n->expr()->accept(this);
+    auto idNode = dynamic_cast<IdAstNode*>(n->id()->accept(this));
+
+    assert(idNode);
+
+    return new StructAccessAstNode(object, idNode->getName());
 }
 
 FuncDefAstNode* CanInitVisitor::visitFuncDef(FuncDefNode*)
 {
     return nullptr;
+}
+
+Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)
+{
+    int bit;
+    if (n->id() == "b0") {
+        bit = 0;
+    } else if (n->id() == "b1") {
+        bit = 1;
+    } else if (n->id() == "b2") {
+        bit = 2;
+    } else if (n->id() == "b3") {
+        bit = 3;
+    } else if (n->id() == "b4") {
+        bit = 4;
+    } else if (n->id() == "b5") {
+        bit = 5;
+    } else if (n->id() == "b6") {
+        bit = 6;
+    } else if (n->id() == "b7") {
+        bit = 7;
+    } else {
+        assert(false);
+    }
+
+    auto idx = dynamic_cast<IndexAccessAstNode*>(n->object());
+    assert(idx);
+
+    int byte = idx->index()->eval();
+    idx = dynamic_cast<IndexAccessAstNode*>(idx->object());
+    assert(idx);
+
+    int messId = idx->index()->eval();
+
+    auto structNode = dynamic_cast<StructAccessAstNode*>(idx->object());
+    assert(structNode);
+
+    assert(structNode->id() == "can_mes_1bit");
+    auto objectNode = dynamic_cast<IdAstNode*>(structNode->object());
+    assert(objectNode);
+    assert(objectNode->name() == "can_mes");
+
+    return Message::bitMessage(messId, byte, bit);
+}
+
+Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
+{
+    int byte = n->index()->eval();
+
+    auto idx = dynamic_cast<IndexAccessAstNode*>(n->object());
+    assert(idx);
+
+    int messId = idx->index()->eval();
+
+    auto structNode = dynamic_cast<StructAccessAstNode*>(idx->object());
+
+    Message::Type type;
+    if (structNode->id() == "can_mes_char") {
+        type = Message::Int8;
+    } else if (structNode->id() == "can_mes_int") {
+        type = Message::Int16;
+    } else {
+        assert(false);
+    }
+
+    auto objectNode = dynamic_cast<IdAstNode*>(structNode->object());
+    assert(objectNode);
+    assert(objectNode->name() == "can_mes");
+
+    return Message::intMessage(type, messId, byte);
 }
