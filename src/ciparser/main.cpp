@@ -70,7 +70,13 @@ int main()
     auto handle = context.handle("Door1_State");
     for (int i = 0; i < 10; i++) {
         std::cout << "Value: " << *handle << '\n';
-        context.updateTick();
+        context.incTick();
+    }
+
+    std::cout << "Dec:\n";
+    for (int i = 0; i < 16; i++) {
+        std::cout << "Value: " << *handle << '\n';
+        context.decTick();
     }
     return 0;
 }

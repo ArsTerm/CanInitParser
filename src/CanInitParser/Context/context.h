@@ -52,7 +52,8 @@ public:
         return ValueHandle(it->second);
     }
 
-    bool updateTick();
+    bool incTick();
+    bool decTick();
 
     BBTime const& beginTime() const
     {

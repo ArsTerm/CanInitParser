@@ -31,13 +31,31 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
 
     updateUntil(m_beginTime);
 
+    currentTick = m_data->time.toTicks();
+
     for (auto& id : ids) {
         std::cout << "Id: " << id.first
                   << ", value: " << typeid(*id.second).name() << '\n';
     }
 }
 
-bool Context::updateTick()
+bool Context::decTick()
+{
+    if (currentTick == 0) {
+        return false;
+    }
+    if (m_data == end - dataSize) {
+        currentTick--;
+        return false;
+    }
+    auto nextTicks = (m_data - 1)->time.toTicks() - m_beginTime.toTicks();
+    if (--currentTick == nextTicks) {
+        return bbBack();
+    }
+    return false;
+}
+
+bool Context::incTick()
 {
     if (m_data + 1 == end) {
         currentTick++;
