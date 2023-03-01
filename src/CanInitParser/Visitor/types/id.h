@@ -11,8 +11,8 @@ class Value;
 class Id {
 public:
     using Set = std::unordered_map<std::string, Id*>;
-    using UnwrapResult = std::variant<Message const*, Value const*>;
-    virtual UnwrapResult unwrap(Set const& names) const = 0;
+    using UnwrapResult = std::variant<Message*, Value*>;
+    virtual UnwrapResult unwrap(Set const& names) = 0;
     virtual std::string const& name() const = 0;
 
     virtual ~Id() = default;

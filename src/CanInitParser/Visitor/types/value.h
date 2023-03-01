@@ -19,7 +19,7 @@ public:
         return m_expr;
     }
 
-    UnwrapResult unwrap(Set const&) const override;
+    UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
 
     Value(std::string_view id, Expr* expr) : m_id(id), m_expr(expr)

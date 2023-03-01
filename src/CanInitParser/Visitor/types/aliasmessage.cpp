@@ -6,7 +6,7 @@ AliasMessage::AliasMessage(std::string_view name, Message* m)
 {
 }
 
-Id::UnwrapResult AliasMessage::unwrap(Set const&) const
+Id::UnwrapResult AliasMessage::unwrap(Set const&)
 {
     return mess;
 }

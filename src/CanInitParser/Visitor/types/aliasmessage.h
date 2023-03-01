@@ -8,7 +8,7 @@ class Message;
 class AliasMessage : public Id {
 public:
     AliasMessage(std::string_view name, Message* m);
-    UnwrapResult unwrap(Set const&) const override;
+    UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
 
 private:

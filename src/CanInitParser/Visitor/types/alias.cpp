@@ -7,7 +7,7 @@ Alias::Alias(std::string_view name, std::string_view link)
 {
 }
 
-Alias::UnwrapResult Alias::unwrap(Set const& set) const
+Alias::UnwrapResult Alias::unwrap(Set const& set)
 {
     auto link = set.find(linkName);
     assert(link != set.end());

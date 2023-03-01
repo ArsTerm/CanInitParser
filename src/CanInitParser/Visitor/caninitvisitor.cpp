@@ -43,6 +43,8 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
     if (n->funcDef()) {
         auto func = n->funcDef()->accept(this);
     } else {
+        if (!n->expr())
+            return nullptr;
         auto expr = n->expr()->accept(this);
         if (auto node = dynamic_cast<BinExprAstNode*>(expr)) {
             auto value = new Value(id, node->expr());
@@ -56,7 +58,10 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
         } else if (auto node = dynamic_cast<StructAccessAstNode*>(expr)) {
             ids.emplace(id, parseMessage(node));
         } else if (auto node = dynamic_cast<IndexAccessAstNode*>(expr)) {
-            ids.emplace(id, parseMessage(node));
+            // To-do Добавить парсинг cnt_*
+            auto mess = parseMessage(node);
+            if (mess)
+                ids.emplace(id, mess);
         } else {
             assert(false);
         }
@@ -83,6 +88,12 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         dependencies.emplace_back(id->getName());
     } else if (auto num = dynamic_cast<NumberAstNode*>(lNode)) {
         l = new NumberExpr(num->value());
+    } else if (auto num = dynamic_cast<StructAccessAstNode*>(lNode)) {
+        l = new MessExpr(parseMessage(num));
+    } else if (auto num = dynamic_cast<IndexAccessAstNode*>(lNode)) {
+        auto mess = parseMessage(num);
+        assert(mess);
+        l = new MessExpr(mess);
     } else {
         assert(false);
     }
@@ -100,6 +111,12 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         dependencies.emplace_back(id->getName());
     } else if (auto num = dynamic_cast<NumberAstNode*>(rNode)) {
         r = new NumberExpr(num->value());
+    } else if (auto num = dynamic_cast<StructAccessAstNode*>(rNode)) {
+        r = new MessExpr(parseMessage(num));
+    } else if (auto num = dynamic_cast<IndexAccessAstNode*>(rNode)) {
+        auto mess = parseMessage(num);
+        assert(mess);
+        r = new MessExpr(mess);
     } else {
         assert(false);
     }
@@ -121,6 +138,18 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         break;
     case BinExprNode::And:
         target = new AndBinExpr(l, r);
+        break;
+    case BinExprNode::Or:
+        target = new OrBinExpr(l, r);
+        break;
+    case BinExprNode::AndL:
+        target = new AndLogicExpr(l, r);
+        break;
+    case BinExprNode::OrL:
+        target = new OrLogicExpr(l, r);
+        break;
+    case BinExprNode::Eq:
+        target = new EqBinExpr(l, r);
         break;
     default:
         assert(false);
@@ -175,7 +204,7 @@ IndexAccessAstNode* CanInitVisitor::visitIndexAccess(IndexAccessNode* n)
 
 NumberAstNode* CanInitVisitor::visitNumber(NumberNode* n)
 {
-    return new NumberAstNode(std::stoi(n->number()));
+    return new NumberAstNode(std::stoi(n->number(), nullptr, 0));
 }
 
 StructAccessAstNode* CanInitVisitor::visitStructAccess(StructAccessNode* n)
@@ -238,12 +267,35 @@ Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)
 
 Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
 {
-    int byte = n->index()->eval();
+    int byte;
+    if (auto id = dynamic_cast<IdExpr*>(n->index())) {
+        auto it = ids.find(((Alias*)(id->getId()))->getLinkName());
+        assert(it != ids.end());
+        auto value = dynamic_cast<Value*>(it->second);
+        assert(value);
+        byte = value->expr()->eval();
+    } else {
+        byte = n->index()->eval();
+    }
 
     auto idx = dynamic_cast<IndexAccessAstNode*>(n->object());
+    if (idx == nullptr) {
+        auto id = dynamic_cast<IdAstNode*>(n->object());
+        if (id)
+            return nullptr;
+    }
     assert(idx);
 
-    int messId = idx->index()->eval();
+    int messId;
+    if (auto id = dynamic_cast<IdExpr*>(idx->index())) {
+        auto it = ids.find(((Alias*)(id->getId()))->getLinkName());
+        assert(it != ids.end());
+        auto value = dynamic_cast<Value*>(it->second);
+        assert(value);
+        messId = value->expr()->eval();
+    } else {
+        messId = idx->index()->eval();
+    }
 
     auto structNode = dynamic_cast<StructAccessAstNode*>(idx->object());
 

@@ -85,7 +85,7 @@ public:
         return (*((uint8_t*)m_data) >> m_bit) & 1;
     }
 
-    UnwrapResult unwrap(Set const&) const override;
+    UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
 
     Message() = default;

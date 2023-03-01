@@ -65,4 +65,10 @@ target_sources(
           Visitor/types/aliasmessage.h
           Visitor/types/id.h
           Visitor/types/id.cpp
+          Context/context.h
+          Context/context.cpp
+          Context/types/bbdata.cpp
+          Context/types/bbdata.h
+          Context/types/canmes.cpp
+          Context/types/canmes.h
       )

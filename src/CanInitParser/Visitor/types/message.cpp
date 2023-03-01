@@ -1,7 +1,7 @@
 #include "message.h"
 
 namespace ciparser {
-Id::UnwrapResult Message::unwrap(Set const&) const
+Id::UnwrapResult Message::unwrap(Set const&)
 {
     return this;
 }

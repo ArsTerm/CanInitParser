@@ -85,10 +85,10 @@ void CanInitParser::offloadAll(
 
 void CanInitParser::offloadStack(int priority)
 {
-    std::cerr << "Begin offload\n";
+    //    std::cerr << "Begin offload\n";
     offloadStack(stackNodes, stackOperators, priority);
-    std::cerr << "End offload"
-              << ", node size: " << stackNodes.size() << '\n';
+    //    std::cerr << "End offload"
+    //              << ", node size: " << stackNodes.size() << '\n';
 }
 
 void CanInitParser::offloadStack(
@@ -96,8 +96,8 @@ void CanInitParser::offloadStack(
 {
     if (op.size() == 0)
         return;
-    std::cerr << "Operator on top: " << std::string(op.top().t)
-              << ", node size: " << n.size() << '\n';
+    //    std::cerr << "Operator on top: " << std::string(op.top().t)
+    //              << ", node size: " << n.size() << '\n';
     while (op.size() > 0 && op.top().t.type != TType::Eof
            && op.top().t.type != TType::LParen
            && op.top().t.type != TType::LSquare
@@ -109,9 +109,6 @@ void CanInitParser::offloadStack(
 bool CanInitParser::offloadBracket()
 {
     offloadUntil(TType::LParen);
-    if (stackNodes.size() > 0) {
-        std::cerr << "Node:\n" << stackNodes.top()->toJson(0) << '\n';
-    }
     if (!stackOperators.empty()
         && stackOperators.top().t.type == TType::LParen) {
         stackOperators.pop();
@@ -135,19 +132,20 @@ void CanInitParser::offloadUntil(TType type)
 
 ParseNode* CanInitParser::parse_p()
 {
-    struct _Tmp {
-        _Tmp(Token& t) : t(t)
-        {
-            std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        ~_Tmp()
-        {
-            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        Token& t;
-    } _(t);
+    //    struct _Tmp {
+    //        _Tmp(Token& t) : t(t)
+    //        {
+    //            std::cerr << "Begin " << __FUNCTION__ << ": " <<
+    //            std::string(t)
+    //                      << std::endl;
+    //        }
+    //        ~_Tmp()
+    //        {
+    //            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
+    //                      << std::endl;
+    //        }
+    //        Token& t;
+    //    } _(t);
 
     while (t.type == TType::LineFeed)
         updateToken();
@@ -285,19 +283,20 @@ bool CanInitParser::isFunctionDefinition() const
 
 DefinitionNode* CanInitParser::parseDefinition()
 {
-    struct _Tmp {
-        _Tmp(Token& t) : t(t)
-        {
-            std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        ~_Tmp()
-        {
-            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        Token& t;
-    } _(t);
+    //    struct _Tmp {
+    //        _Tmp(Token& t) : t(t)
+    //        {
+    //            std::cerr << "Begin " << __FUNCTION__ << ": " <<
+    //            std::string(t)
+    //                      << std::endl;
+    //        }
+    //        ~_Tmp()
+    //        {
+    //            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
+    //                      << std::endl;
+    //        }
+    //        Token& t;
+    //    } _(t);
 
     auto def = std::move(t);
     assert(def.type == TType::DefineKw);
@@ -319,19 +318,20 @@ DefinitionNode* CanInitParser::parseDefinition()
 
 FuncDefNode* CanInitParser::parseFuncDef()
 {
-    struct _Tmp {
-        _Tmp(Token& t) : t(t)
-        {
-            std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        ~_Tmp()
-        {
-            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        Token& t;
-    } _(t);
+    //    struct _Tmp {
+    //        _Tmp(Token& t) : t(t)
+    //        {
+    //            std::cerr << "Begin " << __FUNCTION__ << ": " <<
+    //            std::string(t)
+    //                      << std::endl;
+    //        }
+    //        ~_Tmp()
+    //        {
+    //            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
+    //                      << std::endl;
+    //        }
+    //        Token& t;
+    //    } _(t);
 
     auto id = std::move(t);
     updateToken();
@@ -360,19 +360,20 @@ FuncDefNode* CanInitParser::parseFuncDef()
 
 ParseNode* CanInitParser::parseExpression(TType endToken)
 {
-    struct _Tmp {
-        _Tmp(Token& t) : t(t)
-        {
-            std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        ~_Tmp()
-        {
-            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
-                      << std::endl;
-        }
-        Token& t;
-    } _(t);
+    //    struct _Tmp {
+    //        _Tmp(Token& t) : t(t)
+    //        {
+    //            std::cerr << "Begin " << __FUNCTION__ << ": " <<
+    //            std::string(t)
+    //                      << std::endl;
+    //        }
+    //        ~_Tmp()
+    //        {
+    //            std::cerr << "End " << __FUNCTION__ << ": " << std::string(t)
+    //                      << std::endl;
+    //        }
+    //        Token& t;
+    //    } _(t);
 
     while (t.type != TType::LineFeed && t.type != endToken) {
         switch (t.type) {
@@ -544,7 +545,7 @@ ParseNode* CanInitParser::parseExpression(TType endToken)
     }
     if (stackNodes.size() > 1)
         offloadAll();
-    std::cerr << "nodes size: " << stackNodes.size() << '\n';
+    //   std::cerr << "nodes size: " << stackNodes.size() << '\n';
     assert(stackNodes.size() == 1);
     auto node = stackNodes.top();
     stackNodes.pop();
@@ -553,11 +554,12 @@ ParseNode* CanInitParser::parseExpression(TType endToken)
 
 NumberNode* CanInitParser::parseNumber()
 {
-    std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-              << std::endl;
+    //    std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
+    //              << std::endl;
     auto num = std::move(t);
     updateToken();
-    std::cerr << "End " << __FUNCTION__ << ": " << std::string(t) << std::endl;
+    //    std::cerr << "End " << __FUNCTION__ << ": " << std::string(t) <<
+    //    std::endl;
     return new NumberNode(std::move(num));
 }
 
@@ -596,10 +598,11 @@ StructAccessNode* CanInitParser::parseStructAccess(ParseNode* l, ParseNode* r)
 
 IdNode* CanInitParser::parseId()
 {
-    std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
-              << std::endl;
+    //    std::cerr << "Begin " << __FUNCTION__ << ": " << std::string(t)
+    //              << std::endl;
     auto id = std::move(t);
     updateToken();
-    std::cerr << "End " << __FUNCTION__ << ": " << std::string(t) << std::endl;
+    //    std::cerr << "End " << __FUNCTION__ << ": " << std::string(t) <<
+    //    std::endl;
     return new IdNode(std::move(id));
 }

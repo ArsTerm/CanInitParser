@@ -647,7 +647,7 @@
 #define ad0_ind can_mes.can_mes_char[21][5]
 #define S_ah can_mes.can_mes_char[21][6]
 #define Tlia_Max can_mes.can_mes_char[21][7]
-#define cnt_1_ind can_cnt
+#define cnt_1_ind can_cnt[21]
 #define R0_kab can_mes.can_mes_char[23][0]
 #define R1_kab can_mes.can_mes_char[23][1]
 #define IsnkabL can_mes.can_mes_char[23][2]
@@ -1855,26 +1855,26 @@
     ((can_mes.can_mes_char[EDSC2_dr2][3] & 0b11) \
      == 0b01) // 1 - датчик аппарели активен
 
-#define Door2_InvSalon (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 4) == 1)
-#define Door2_InvOut (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 6) == 1)
-#define Door1_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr1][0]), 0) == 1)
-#define Door2_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 0) == 1)
-#define Door3_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr3][0]), 0) == 1)
-#define Door1_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr1][6]), 4) == 1)
-#define Door2_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr2][6]), 4) == 1)
-#define Door3_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr3][6]), 4) == 1)
-#define Door1_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 2) == 1)
-#define Door2_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 2) == 1)
-#define Door3_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 2) == 1)
-#define Door1_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 4) == 1)
-#define Door2_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 4) == 1)
-#define Door3_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 4) == 1)
-#define Door1_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 6) == 1)
-#define Door2_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 6) == 1)
-#define Door3_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 6) == 1)
-#define Door1_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr1][2], 0) == 1)
-#define Door2_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr2][2], 0) == 1)
-#define Door3_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr3][2], 0) == 1)
+// #define Door2_InvSalon (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 4) == 1)
+// #define Door2_InvOut (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 6) == 1)
+// #define Door1_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr1][0]), 0) == 1)
+// #define Door2_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr2][0]), 0) == 1)
+// #define Door3_Pas2 (BIT2((can_mes.can_mes_char[EDSC2_dr3][0]), 0) == 1)
+// #define Door1_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr1][6]), 4) == 1)
+// #define Door2_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr2][6]), 4) == 1)
+// #define Door3_Pas (BIT2((can_mes.can_mes_char[EDSC2_dr3][6]), 4) == 1)
+// #define Door1_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 2) == 1)
+// #define Door2_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 2) == 1)
+// #define Door3_KranSalon (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 2) == 1)
+// #define Door1_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 4) == 1)
+// #define Door2_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 4) == 1)
+// #define Door3_KranOut (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 4) == 1)
+// #define Door1_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr1][1], 6) == 1)
+// #define Door2_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr2][1], 6) == 1)
+// #define Door3_KranCapSalon (BIT2(can_mes.can_mes_char[EDSC2_dr3][1], 6) == 1)
+// #define Door1_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr1][2], 0) == 1)
+// #define Door2_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr2][2], 0) == 1)
+// #define Door3_KranCapOut (BIT2(can_mes.can_mes_char[EDSC2_dr3][2], 0) == 1)
 //--------Бук----------------------------------------------------------------------------------------------------
 //- R0_buk
 #define rele_kondic \

@@ -48,6 +48,16 @@ public:
     StructAccessAstNode* visitStructAccess(StructAccessNode*);
     FuncDefAstNode* visitFuncDef(FuncDefNode*);
 
+    Id::Set&& move_ids()
+    {
+        return std::move(ids);
+    }
+
+    Id::Set const& get_ids()
+    {
+        return ids;
+    }
+
 private:
     std::vector<Alias> aliases;
     std::vector<Value> values;
