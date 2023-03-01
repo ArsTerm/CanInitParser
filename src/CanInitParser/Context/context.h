@@ -6,6 +6,31 @@
 #include <unordered_map>
 
 namespace ciparser {
+class ValueHandle {
+public:
+    ValueHandle(Expr* e) : expr(e)
+    {
+    }
+
+    bool isNull() const
+    {
+        return expr == nullptr;
+    }
+
+    int get() const
+    {
+        return expr->eval();
+    }
+
+    friend int operator*(ValueHandle const& val)
+    {
+        return val.get();
+    }
+
+private:
+    Expr* expr;
+};
+
 class CANINITPARSER_EXPORT Context {
 public:
     Context(BBFrame* data, size_t dataSize, Id::Set const& ids);
@@ -16,6 +41,15 @@ public:
         if (it == ids.end())
             assert(false);
         return it->second->eval();
+    }
+
+    ValueHandle handle(std::string const& name) const
+    {
+        auto it = ids.find(name);
+        if (it == ids.end()) {
+            return ValueHandle(nullptr);
+        }
+        return ValueHandle(it->second);
     }
 
     bool updateTick();

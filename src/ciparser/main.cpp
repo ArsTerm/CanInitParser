@@ -67,19 +67,10 @@ int main()
 
     ciparser::Context context(frames, 4, visitor.get_ids());
 
-    std::cout << "Value: " << context.value("Door1_State") << ", "
-              << (15 & 0x0F) << '\n';
+    auto handle = context.handle("Door1_State");
     for (int i = 0; i < 10; i++) {
+        std::cout << "Value: " << *handle << '\n';
         context.updateTick();
-        std::cout << "Value: " << context.value("Door1_State") << '\n';
     }
-
-    //    visitor.parse();
-    //    auto t = lexer.nextToken();
-    //    while (t.type != ciparser::CanInitLexer::Eof) {
-    //        std::cout << lexer.tokenToString(t) << std::endl;
-    //        t = lexer.nextToken();
-    //    }
-
     return 0;
 }

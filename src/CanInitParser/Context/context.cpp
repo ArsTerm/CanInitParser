@@ -122,6 +122,7 @@ void Context::updateUntil(const BBTime& time)
             return;
         }
     }
+    m_data = (m_data);
 }
 
 void Context::updateBB()
