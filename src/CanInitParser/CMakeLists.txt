@@ -67,8 +67,6 @@ target_sources(
           Visitor/types/id.cpp
           Context/context.h
           Context/context.cpp
-          Context/types/bbdata.cpp
           Context/types/bbdata.h
-          Context/types/canmes.cpp
           Context/types/canmes.h
       )

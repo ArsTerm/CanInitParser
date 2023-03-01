@@ -15,21 +15,7 @@ public:
 
 class MessExpr final : public Expr {
 public:
-    int eval() override
-    {
-        if (mess.type() == Message::Bit)
-            return mess.bitValue();
-        if (mess.type() == Message::Int8)
-            return mess.value<int8_t>();
-        if (mess.type() == Message::Uint8)
-            return mess.value<uint8_t>();
-        if (mess.type() == Message::Int16)
-            return mess.value<int16_t>();
-        if (mess.type() == Message::Uint16)
-            return mess.value<uint16_t>();
-        assert(false);
-        return 0;
-    }
+    int eval() override;
 
     Message* message()
     {
@@ -51,11 +37,7 @@ private:
 
 class IdExpr final : public Expr {
 public:
-    int eval() override
-    {
-        assert(false);
-        return 0;
-    }
+    int eval() override;
 
     std::optional<Id::UnwrapResult> linkId(Id::Set const& set) override
     {
@@ -77,10 +59,7 @@ private:
 
 class NumberExpr final : public Expr {
 public:
-    int eval() override
-    {
-        return value;
-    }
+    int eval() override;
 
     std::optional<Id::UnwrapResult> linkId(Id::Set const& set) override
     {
@@ -120,10 +99,7 @@ protected:
 
 class SumExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() + r->eval();
-    }
+    int eval() override;
 
     SumExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -132,10 +108,7 @@ public:
 
 class SubExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() - r->eval();
-    }
+    int eval() override;
 
     SubExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -144,10 +117,7 @@ public:
 
 class MulExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() * r->eval();
-    }
+    int eval() override;
 
     MulExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -156,10 +126,7 @@ public:
 
 class DivExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() / r->eval();
-    }
+    int eval() override;
 
     DivExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -168,12 +135,7 @@ public:
 
 class AndBinExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        auto lVal = l->eval();
-        auto rVal = r->eval();
-        return lVal & rVal;
-    }
+    int eval() override;
 
     AndBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -182,10 +144,7 @@ public:
 
 class OrBinExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() | r->eval();
-    }
+    int eval() override;
 
     OrBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -194,10 +153,7 @@ public:
 
 class AndLogicExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() && r->eval();
-    }
+    int eval() override;
 
     AndLogicExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -206,10 +162,7 @@ public:
 
 class OrLogicExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() || r->eval();
-    }
+    int eval() override;
 
     OrLogicExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
@@ -218,10 +171,7 @@ public:
 
 class EqBinExpr final : public BinaryExpr {
 public:
-    int eval() override
-    {
-        return l->eval() == r->eval();
-    }
+    int eval() override;
 
     EqBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
