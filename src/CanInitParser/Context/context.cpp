@@ -29,9 +29,9 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
         }
     }
 
-    updateUntil(m_beginTime);
+    currentTick = m_beginTime.toTicks();
 
-    currentTick = m_data->time.toTicks();
+    updateUntil(m_beginTime);
 
     for (auto& id : ids) {
         std::cout << "Id: " << id.first
@@ -57,11 +57,11 @@ bool Context::decTick()
 
 bool Context::incTick()
 {
-    if (m_data + 1 == end) {
+    if (m_data == end) {
         currentTick++;
         return false;
     }
-    auto nextTicks = (m_data + 1)->time.toTicks() - m_beginTime.toTicks();
+    auto nextTicks = m_data->time.toTicks() - m_beginTime.toTicks();
     if (++currentTick == nextTicks) {
         return bbStep();
     }
@@ -70,11 +70,11 @@ bool Context::incTick()
 
 bool Context::bbStep()
 {
-    if ((m_data + 1) == end) {
+    if (m_data == end) {
         return false;
     }
-    m_data += 1;
     updateBB();
+    m_data += 1;
     return true;
 }
 
@@ -83,8 +83,9 @@ bool Context::bbBack()
     if (m_data == end - dataSize) {
         return false;
     }
-    m_data -= 1;
+    m_data -= 2;
     updateBB();
+    m_data += 1;
     return true;
 }
 
@@ -140,7 +141,6 @@ void Context::updateUntil(const BBTime& time)
             return;
         }
     }
-    m_data = (m_data);
 }
 
 void Context::updateBB()

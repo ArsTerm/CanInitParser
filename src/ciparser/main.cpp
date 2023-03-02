@@ -59,7 +59,7 @@ int main()
 
     frames[2].time = ciparser::BBTime(frames[0].time, 2);
     frames[2].id = 26;
-    frames[2].data = {100, 100, 100, 100, 100, 100, 100, 100};
+    frames[2].data = {101, 101, 101, 101, 101, 101, 101, 101};
 
     frames[3].time = ciparser::BBTime(frames[0].time, 5);
     frames[3].id = 26;
@@ -68,14 +68,14 @@ int main()
     ciparser::Context context(frames, 4, visitor.get_ids());
 
     auto handle = context.handle("Door1_State");
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 7; i++) {
         std::cout << "Value: " << *handle << '\n';
         context.incTick();
     }
 
     std::cout << "Dec:\n";
-    for (int i = 0; i < 16; i++) {
-        std::cout << "Value: " << *handle << '\n';
+    for (int i = 0; i < 7; i++) {
+        std::cout << "Value: " << *handle << std::endl;
         context.decTick();
     }
     return 0;

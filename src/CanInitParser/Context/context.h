@@ -52,6 +52,11 @@ public:
         return ValueHandle(it->second);
     }
 
+    size_t position() const
+    {
+        return currentTick;
+    }
+
     bool incTick();
     bool decTick();
 
