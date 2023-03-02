@@ -254,7 +254,6 @@ constexpr int CanInitParser::operatorPriority(TType type, bool unary)
     default:
         break;
     }
-    assert(false);
     return 0;
 }
 

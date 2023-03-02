@@ -7,7 +7,14 @@
 
 namespace ciparser {
 
-class CANINITPARSER_EXPORT CanInitLexer {
+#ifdef CANINITPARSER_LIBRARY
+#define EXPORT Q_DECL_EXPORT
+#else
+#define EXPORT Q_DECL_IMPORT
+#endif
+
+class EXPORT CanInitLexer {
+#undef EXPORT
 public:
     enum TokenType {
         Eof = -1,
@@ -190,7 +197,6 @@ private:
         return t;
     }
 };
-
 }
 
 #endif // CANINITLEXER_H

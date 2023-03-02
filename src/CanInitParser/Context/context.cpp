@@ -9,9 +9,6 @@ namespace ciparser {
 Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
     : m_data(data), dataSize(dataSize)
 {
-    end = m_data + dataSize;
-    m_beginTime = m_data->time;
-
     for (auto& val : ids_vals) {
         auto result = val.second->unwrap(ids_vals);
         if (result.index() == 0) {
@@ -29,6 +26,11 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
         }
     }
 
+    if (!m_data || dataSize == 0)
+        return;
+    end = m_data + dataSize;
+    m_beginTime = m_data->time;
+
     currentTick = m_beginTime.toTicks();
 
     updateUntil(m_beginTime);
@@ -37,6 +39,18 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
         std::cout << "Id: " << id.first
                   << ", value: " << typeid(*id.second).name() << '\n';
     }
+}
+
+void Context::setData(BBFrame* data, size_t dataSize)
+{
+    m_data = data;
+    this->dataSize = dataSize;
+
+    end = m_data + dataSize;
+    m_beginTime = m_data->time;
+
+    currentTick = m_beginTime.toTicks();
+    updateUntil(m_beginTime);
 }
 
 bool Context::decTick()

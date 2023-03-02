@@ -31,7 +31,14 @@ private:
     Expr* expr;
 };
 
-class CANINITPARSER_EXPORT Context {
+#ifdef CANINITPARSER_LIBRARY
+#define EXPORT Q_DECL_EXPORT
+#else
+#define EXPORT Q_DECL_IMPORT
+#endif
+
+class EXPORT Context {
+#undef EXPORT
 public:
     Context(BBFrame* data, size_t dataSize, Id::Set const& ids);
 
@@ -59,6 +66,8 @@ public:
 
     bool incTick();
     bool decTick();
+
+    void setData(BBFrame* data, size_t dataSize);
 
     BBTime const& beginTime() const
     {

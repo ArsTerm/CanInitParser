@@ -32,7 +32,14 @@ class IndexAccessAstNode;
 class NumberAstNode;
 class Message;
 
-class CANINITPARSER_EXPORT CanInitVisitor {
+#ifdef CANINITPARSER_LIBRARY
+#define EXPORT Q_DECL_EXPORT
+#else
+#define EXPORT Q_DECL_IMPORT
+#endif
+
+class EXPORT CanInitVisitor {
+#undef EXPORT
 public:
     CanInitVisitor();
 

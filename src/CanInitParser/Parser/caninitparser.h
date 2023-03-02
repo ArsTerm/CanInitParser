@@ -20,10 +20,16 @@ class NumberNode;
 class StructAccessNode;
 class FuncDefNode;
 
-class CANINITPARSER_EXPORT CanInitParser {
+#ifdef CANINITPARSER_LIBRARY
+#define EXPORT Q_DECL_EXPORT
+#else
+#define EXPORT Q_DECL_IMPORT
+#endif
+
+class EXPORT CanInitParser {
     using Token = CanInitLexer::Token;
     using TType = CanInitLexer::TokenType;
-
+#undef EXPORT
 public:
     CanInitParser(std::unique_ptr<CanInitLexer>&& lexer);
 

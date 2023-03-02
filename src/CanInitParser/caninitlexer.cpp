@@ -54,7 +54,11 @@ void CanInitLexer::tokenize()
         }
         break;
     case '\\':
-        if (*(data + 1) == '\n') {
+        if (*(data + 1) == '\r' && *(data + 2) == '\n') {
+            line++;
+            charPosInLine = 0;
+            data += 2;
+        } else if (*(data + 1) == '\n') {
             line++;
             charPosInLine = 0;
             data++;
