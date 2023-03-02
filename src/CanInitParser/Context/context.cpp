@@ -62,9 +62,13 @@ bool Context::decTick()
         currentTick--;
         return false;
     }
-    auto nextTicks = (m_data - 1)->time.toTicks() - m_beginTime.toTicks();
-    if (--currentTick == nextTicks) {
+    auto prevData = m_data - 1;
+    auto nextTicks = prevData->time.toTicks() - m_beginTime.toTicks();
+    if (currentTick == nextTicks) {
+        --currentTick;
         return bbBack();
+    } else {
+        --currentTick;
     }
     return false;
 }
@@ -98,6 +102,9 @@ bool Context::bbBack()
         return false;
     }
     m_data -= 2;
+    if (m_data < end - dataSize) {
+        m_data = end - dataSize;
+    }
     updateBB();
     m_data += 1;
     return true;
