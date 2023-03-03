@@ -25,6 +25,8 @@
 #include <cassert>
 #include <typeinfo>
 
+#include <utility>
+
 using namespace ciparser;
 
 CanInitVisitor::CanInitVisitor()
@@ -41,7 +43,8 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
     auto id = n->id();
 
     if (n->funcDef()) {
-        auto func = n->funcDef()->accept(this);
+        // To-do
+        // auto func = n->funcDef()->accept(this);
     } else {
         if (!n->expr())
             return nullptr;
@@ -95,7 +98,7 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         assert(mess);
         l = new MessExpr(mess);
     } else {
-        assert(false);
+        std::abort();
     }
 
     auto rNode = n->r()->accept(this);
@@ -118,7 +121,7 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         assert(mess);
         r = new MessExpr(mess);
     } else {
-        assert(false);
+        std::abort();
     }
 
     Expr* target;
@@ -152,7 +155,7 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
         target = new EqBinExpr(l, r);
         break;
     default:
-        assert(false);
+        std::abort();
     }
 
     return new BinExprAstNode(target, std::move(dependencies));
@@ -197,7 +200,7 @@ IndexAccessAstNode* CanInitVisitor::visitIndexAccess(IndexAccessNode* n)
     } else if (auto node = dynamic_cast<IdAstNode*>(idxNode)) {
         idx = new IdExpr(new Alias("", node->getName()));
     } else {
-        assert(false);
+        std::abort();
     }
     return new IndexAccessAstNode(object, idx);
 }
@@ -242,7 +245,7 @@ Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)
     } else if (n->id() == "b7") {
         bit = 7;
     } else {
-        assert(false);
+        std::abort();
     }
 
     auto idx = dynamic_cast<IndexAccessAstNode*>(n->object());
@@ -255,11 +258,15 @@ Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)
     int messId = idx->index()->eval();
 
     auto structNode = dynamic_cast<StructAccessAstNode*>(idx->object());
-    assert(structNode);
+    if (!structNode)
+        std::abort();
 
     assert(structNode->id() == "can_mes_1bit");
+
     auto objectNode = dynamic_cast<IdAstNode*>(structNode->object());
-    assert(objectNode);
+    if (!objectNode)
+        std::abort();
+
     assert(objectNode->name() == "can_mes");
 
     return Message::bitMessage(messId, byte, bit);
@@ -284,7 +291,8 @@ Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
         if (id)
             return nullptr;
     }
-    assert(idx);
+    if (!idx)
+        std::abort();
 
     int messId;
     if (auto id = dynamic_cast<IdExpr*>(idx->index())) {
@@ -305,11 +313,13 @@ Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
     } else if (structNode->id() == "can_mes_int") {
         type = Message::Int16;
     } else {
-        assert(false);
+        std::abort();
     }
 
     auto objectNode = dynamic_cast<IdAstNode*>(structNode->object());
-    assert(objectNode);
+    if (!objectNode)
+        std::abort();
+
     assert(objectNode->name() == "can_mes");
 
     return Message::intMessage(type, messId, byte);

@@ -30,6 +30,8 @@ struct BBTime {
                 + (hour * 60 * 24 * 128);
     }
 
+    BBTime& operator=(BBTime const&) = default;
+
     friend bool operator>(BBTime const& l, BBTime const& r)
     {
         return l.toTicks() > r.toTicks();

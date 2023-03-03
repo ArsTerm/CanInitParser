@@ -40,14 +40,7 @@ private:
     int8_t* ptr = nullptr;
 };
 
-#ifdef CANINITPARSER_LIBRARY
-#define EXPORT Q_DECL_EXPORT
-#else
-#define EXPORT Q_DECL_IMPORT
-#endif
-
-class EXPORT Context {
-#undef EXPORT
+class CANINITPARSER_EXPORT Context {
 public:
     Context();
     Context(BBFrame* data, size_t dataSize, Id::Set const& ids);
@@ -87,6 +80,11 @@ public:
     BBTime const& beginTime() const
     {
         return m_beginTime;
+    }
+
+    BBTime const& endTime() const
+    {
+        return (end - 1)->time;
     }
 
 private:

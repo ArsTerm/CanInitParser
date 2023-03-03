@@ -72,3 +72,5 @@ target_sources(
           Context/types/valuesarray.h
           Context/types/valuesarray.cpp
       )
+
+set_compile_options(${target_name})

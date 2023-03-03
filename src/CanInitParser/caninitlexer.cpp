@@ -72,8 +72,11 @@ void CanInitLexer::tokenize()
             token = generate(LineFeed, std::string_view(data, 2));
             line++;
             charPosInLine = 1;
-            break;
+        } else {
+            data++;
+            charPosInLine++;
         }
+        break;
     case '\n':
         token = generate(LineFeed, std::string_view(data, 1));
         line++;

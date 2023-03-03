@@ -1,20 +1,11 @@
-#ifndef CANINITLEXER_H
-#define CANINITLEXER_H
+#pragma once
 
 #include "CanInitParser_global.h"
 #include <string>
 #include <string_view>
 
 namespace ciparser {
-
-#ifdef CANINITPARSER_LIBRARY
-#define EXPORT Q_DECL_EXPORT
-#else
-#define EXPORT Q_DECL_IMPORT
-#endif
-
-class EXPORT CanInitLexer {
-#undef EXPORT
+class CANINITPARSER_EXPORT CanInitLexer {
 public:
     enum TokenType {
         Eof = -1,
@@ -96,6 +87,8 @@ public:
             TYPE_CASE(MoreOrEq)
             TYPE_CASE(LShift)
             TYPE_CASE(RShift)
+        default:
+            return "";
         }
     }
 
@@ -198,5 +191,3 @@ private:
     }
 };
 }
-
-#endif // CANINITLEXER_H

@@ -60,11 +60,11 @@ bool Context::incTick()
     }
     bool ret = false;
     currentTick++;
-    while ((m_data + 1)->time.toTicks() == currentTick) {
+    while ((m_data + 1)->time.toTicks() == (time_t)currentTick) {
         m_data++;
         if (!bbStep())
             break;
-        if (m_data->time.toTicks() > currentTick) {
+        if (m_data->time.toTicks() > (time_t)currentTick) {
             m_data--;
         }
         ret = true;

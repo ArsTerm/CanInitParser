@@ -61,7 +61,7 @@ class NumberExpr final : public Expr {
 public:
     int eval() override;
 
-    std::optional<Id::UnwrapResult> linkId(Id::Set const& set) override
+    std::optional<Id::UnwrapResult> linkId(Id::Set const&) override
     {
         return std::nullopt;
     }

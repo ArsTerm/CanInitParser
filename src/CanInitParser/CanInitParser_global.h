@@ -1,6 +1,6 @@
-#ifndef CANINITPARSER_GLOBAL_H
-#define CANINITPARSER_GLOBAL_H
+#pragma once
 
+#if !defined(Q_DECL_EXPORT) || !defined(Q_DECL_IMPORT)
 #if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64)         \
         || defined(__WIN64__) || defined(WIN32) || defined(_WIN32) \
         || defined(__WIN32__) || defined(__NT__)
@@ -9,6 +9,7 @@
 #else
 #define Q_DECL_EXPORT __attribute__((visibility("default")))
 #define Q_DECL_IMPORT __attribute__((visibility("default")))
+#endif
 #endif
 
 #if defined(CANINITPARSER_LIBRARY)
@@ -21,5 +22,3 @@
     c(c const&) = delete;            \
     c& operator=(c const&) = delete; \
     c() = delete;
-
-#endif // CANINITPARSER_GLOBAL_H

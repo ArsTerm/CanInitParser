@@ -194,7 +194,8 @@ CanInitParser::parse_p(const Token& operation, ParseNode* l, ParseNode* r)
     }
 }
 
-ParseNode* CanInitParser::parse_p(const Token& operation, ParseNode* n)
+// To-do Dead code
+ParseNode* CanInitParser::parse_p(const Token& operation, ParseNode*)
 {
     switch (operation.type) {
     default:
@@ -274,7 +275,7 @@ bool CanInitParser::isFunctionDefinition() const
     auto const& next = lexer->peek();
     if ((t.type == TType::Id && next.type == TType::LParen)
         && (t.line == next.line)
-        && (t.charPosInLine + t.data.size()) == next.charPosInLine)
+        && (t.charPosInLine + t.data.size()) == (size_t)next.charPosInLine)
         return true;
     else
         return false;
@@ -518,7 +519,8 @@ ParseNode* CanInitParser::parseExpression(TType endToken)
         case TType::Increment: {
             auto const& next = lexer->peek();
             if (next.type == TType::Id
-                && next.charPosInLine == t.charPosInLine + t.data.size()) {
+                && (size_t)next.charPosInLine
+                        == t.charPosInLine + t.data.size()) {
                 offloadStack(operatorPriority(TType::Increment, true));
             } else
                 offloadStack(operatorPriority(TType::Increment, false));
@@ -528,7 +530,8 @@ ParseNode* CanInitParser::parseExpression(TType endToken)
         case TType::Decrement: {
             auto const& next = lexer->peek();
             if (next.type == TType::Id
-                && next.charPosInLine == t.charPosInLine + t.data.size()) {
+                && (size_t)next.charPosInLine
+                        == t.charPosInLine + t.data.size()) {
                 offloadStack(operatorPriority(TType::Decrement, true));
             } else
                 offloadStack(operatorPriority(TType::Decrement, false));

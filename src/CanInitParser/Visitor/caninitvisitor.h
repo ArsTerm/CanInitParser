@@ -1,5 +1,4 @@
-#ifndef CANINITVISITOR_H
-#define CANINITVISITOR_H
+#pragma once
 
 #include "../CanInitParser_global.h"
 #include "types/alias.h"
@@ -32,14 +31,7 @@ class IndexAccessAstNode;
 class NumberAstNode;
 class Message;
 
-#ifdef CANINITPARSER_LIBRARY
-#define EXPORT Q_DECL_EXPORT
-#else
-#define EXPORT Q_DECL_IMPORT
-#endif
-
-class EXPORT CanInitVisitor {
-#undef EXPORT
+class CANINITPARSER_EXPORT CanInitVisitor {
 public:
     CanInitVisitor();
 
@@ -75,5 +67,3 @@ private:
     Message* parseMessage(IndexAccessAstNode*);
 };
 }
-
-#endif // CANINITVISITOR_H
