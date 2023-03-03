@@ -3,13 +3,18 @@
 #include "../CanInitParser_global.h"
 #include "../Visitor/expr.h"
 #include "types/bbdata.h"
-#include "types/valuesarray.h"
 #include <unordered_map>
 
 namespace ciparser {
 class ValueHandle {
 public:
+    ValueHandle() = default;
+
     ValueHandle(Expr* e) : expr(e)
+    {
+    }
+
+    ValueHandle(int8_t* ptr) : ptr(ptr)
     {
     }
 
@@ -20,6 +25,8 @@ public:
 
     int get() const
     {
+        if (ptr)
+            return *ptr;
         return expr->eval();
     }
 
@@ -29,7 +36,8 @@ public:
     }
 
 private:
-    Expr* expr;
+    Expr* expr = nullptr;
+    int8_t* ptr = nullptr;
 };
 
 #ifdef CANINITPARSER_LIBRARY
@@ -56,9 +64,14 @@ public:
     {
         auto it = ids.find(name);
         if (it == ids.end()) {
-            return ValueHandle(nullptr);
+            return ValueHandle();
         }
         return ValueHandle(it->second);
+    }
+
+    ValueHandle handle(int mes, int offset) const
+    {
+        return ValueHandle((int8_t*)&canMes[mes].byte[offset]);
     }
 
     size_t position() const

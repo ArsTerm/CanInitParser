@@ -32,17 +32,12 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
 
     if (!m_data || dataSize == 0)
         return;
-    end = m_data + dataSize;
-    m_beginTime = m_data->time;
+    setData(data, dataSize);
 
-    currentTick = m_beginTime.toTicks();
-
-    updateUntil(m_beginTime);
-
-    for (auto& id : ids) {
-        std::cout << "Id: " << id.first
-                  << ", value: " << typeid(*id.second).name() << '\n';
-    }
+    //    for (auto& id : ids) {
+    //        std::cout << "Id: " << id.first
+    //                  << ", value: " << typeid(*id.second).name() << '\n';
+    //    }
 }
 
 void Context::setData(BBFrame* data, size_t dataSize)
@@ -103,7 +98,7 @@ void Context::linkMessage(Message* m)
         auto messId = m->messId();
         auto byte = m->offset();
         assert(messId < 255 && byte < 4);
-        m->setData(&canMes[messId].word[byte]);
+        m->setData(canMes[messId].word + byte);
         break;
     }
     case Message::Int8:
@@ -111,7 +106,7 @@ void Context::linkMessage(Message* m)
         auto messId = m->messId();
         auto byte = m->offset();
         assert(messId < 255 && byte < 8);
-        m->setData(&canMes[messId].byte[byte]);
+        m->setData(canMes[messId].byte + byte);
         break;
     }
     case Message::Bit: {
@@ -119,7 +114,7 @@ void Context::linkMessage(Message* m)
         auto byte = m->offset();
         auto bit = m->bit();
         assert(messId < 255 && byte < 8 && bit < 8);
-        m->setData(&canMes[messId].byte[byte]);
+        m->setData(canMes[messId].byte + byte);
         break;
     }
     }
