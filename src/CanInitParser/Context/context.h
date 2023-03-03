@@ -3,6 +3,7 @@
 #include "../CanInitParser_global.h"
 #include "../Visitor/expr.h"
 #include "types/bbdata.h"
+#include "types/valuesarray.h"
 #include <unordered_map>
 
 namespace ciparser {
@@ -40,6 +41,7 @@ private:
 class EXPORT Context {
 #undef EXPORT
 public:
+    Context();
     Context(BBFrame* data, size_t dataSize, Id::Set const& ids);
 
     int value(std::string const& name) const
@@ -65,7 +67,7 @@ public:
     }
 
     bool incTick();
-    bool decTick();
+    void reset();
 
     void setData(BBFrame* data, size_t dataSize);
 
@@ -88,6 +90,5 @@ private:
     void updateUntil(BBTime const& time);
     void updateBB();
     bool bbStep();
-    bool bbBack();
 };
 }

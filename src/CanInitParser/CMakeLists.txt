@@ -69,4 +69,6 @@ target_sources(
           Context/context.cpp
           Context/types/bbdata.h
           Context/types/canmes.h
+          Context/types/valuesarray.h
+          Context/types/valuesarray.cpp
       )

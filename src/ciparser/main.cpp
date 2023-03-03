@@ -76,7 +76,7 @@ int main()
     std::cout << "Dec:\n";
     for (int i = 0; i < 7; i++) {
         std::cout << "Value: " << *handle << std::endl;
-        context.decTick();
+        // context.decTick();
     }
     return 0;
 }

@@ -6,6 +6,10 @@
 
 namespace ciparser {
 
+Context::Context() : m_data(nullptr), dataSize(0)
+{
+}
+
 Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
     : m_data(data), dataSize(dataSize)
 {
@@ -53,57 +57,38 @@ void Context::setData(BBFrame* data, size_t dataSize)
     updateUntil(m_beginTime);
 }
 
-bool Context::decTick()
-{
-    if (currentTick == 0) {
-        return false;
-    }
-    if (m_data == end - dataSize) {
-        currentTick--;
-        return false;
-    }
-    auto prevData = m_data - 1;
-    auto nextTicks = prevData->time.toTicks() - m_beginTime.toTicks();
-    if (currentTick == nextTicks) {
-        --currentTick;
-        return bbBack();
-    } else {
-        --currentTick;
-    }
-    return false;
-}
-
 bool Context::incTick()
 {
-    if (m_data == end) {
+    if (m_data == end - 1) {
         currentTick++;
         return false;
     }
-    auto nextTicks = m_data->time.toTicks() - m_beginTime.toTicks();
-    if (++currentTick == nextTicks) {
-        return bbStep();
+    bool ret = false;
+    currentTick++;
+    while ((m_data + 1)->time.toTicks() == currentTick) {
+        m_data++;
+        if (!bbStep())
+            break;
+        if (m_data->time.toTicks() > currentTick) {
+            m_data--;
+        }
+        ret = true;
     }
-    return false;
+
+    return ret;
+}
+
+void Context::reset()
+{
+    currentTick = m_beginTime.toTicks();
+    m_data = end - dataSize;
+    updateUntil(m_beginTime);
 }
 
 bool Context::bbStep()
 {
     if (m_data == end) {
         return false;
-    }
-    updateBB();
-    m_data += 1;
-    return true;
-}
-
-bool Context::bbBack()
-{
-    if (m_data == end - dataSize) {
-        return false;
-    }
-    m_data -= 2;
-    if (m_data < end - dataSize) {
-        m_data = end - dataSize;
     }
     updateBB();
     m_data += 1;
@@ -159,9 +144,10 @@ void Context::updateUntil(const BBTime& time)
 {
     while (m_data->time <= time) {
         if (!bbStep()) {
-            return;
+            break;
         }
     }
+    m_data--;
 }
 
 void Context::updateBB()
