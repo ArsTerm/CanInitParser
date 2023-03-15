@@ -52,6 +52,11 @@ void Context::setData(BBFrame* data, size_t dataSize)
     updateUntil(m_beginTime);
 }
 
+const std::unordered_map<std::string, Expr*>& Context::getIds() const
+{
+    return ids;
+}
+
 bool Context::incTick()
 {
     if (m_data == end - 1) {

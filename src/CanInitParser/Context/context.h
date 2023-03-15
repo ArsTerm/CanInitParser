@@ -87,6 +87,8 @@ public:
         return (end - 1)->time;
     }
 
+    std::unordered_map<std::string, Expr*> const& getIds() const;
+
 private:
     BBFrame* m_data;
     BBFrame* end;
