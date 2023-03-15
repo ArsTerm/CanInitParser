@@ -13,6 +13,7 @@
 #include "nodes/astnode.h"
 #include "nodes/binexprastnode.h"
 #include "nodes/caninitastnode.h"
+#include "nodes/commentastnode.h"
 #include "nodes/definitionastnode.h"
 #include "nodes/funccallastnode.h"
 #include "nodes/funcdefastnode.h"
@@ -69,6 +70,8 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
             assert(false);
         }
     }
+
+    auto comment = n->comment()->accept(this);
 
     return new DefinitionAstNode;
 }
@@ -223,6 +226,11 @@ StructAccessAstNode* CanInitVisitor::visitStructAccess(StructAccessNode* n)
 FuncDefAstNode* CanInitVisitor::visitFuncDef(FuncDefNode*)
 {
     return nullptr;
+}
+
+CommentAstNode* CanInitVisitor::visitCommentNode(CommentNode* n)
+{
+    return new CommentAstNode(n);
 }
 
 Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)

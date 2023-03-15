@@ -1,5 +1,6 @@
 #include "commentnode.h"
 #include "../Visitor/caninitvisitor.h"
+#include "../Visitor/nodes/commentastnode.h"
 
 namespace ciparser {
 
@@ -10,10 +11,9 @@ CommentNode::CommentNode(
 {
 }
 
-AstNode* ciparser::CommentNode::accept(CanInitVisitor*)
+AstNode* ciparser::CommentNode::accept(CanInitVisitor* visitor)
 {
-    std::terminate();
-    return nullptr;
+    return visitor->visitCommentNode(this);
 }
 
 std::string ciparser::CommentNode::toJson(int spaces)

@@ -67,6 +67,8 @@ target_sources(
           Visitor/types/aliasmessage.h
           Visitor/types/id.h
           Visitor/types/id.cpp
+          Visitor/nodes/commentastnode.h
+          Visitor/nodes/commentastnode.cpp
           Context/context.h
           Context/context.cpp
           Context/types/bbdata.h

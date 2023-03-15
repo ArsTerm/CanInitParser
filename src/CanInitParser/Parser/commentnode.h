@@ -7,6 +7,8 @@
 namespace ciparser {
 
 class CommentNode : public ParseNode {
+    friend class CommentAstNode;
+
 public:
     CommentNode(
             std::unordered_map<std::string, std::string>&& attrs,
@@ -28,7 +30,7 @@ private:
 
     // ParseNode interface
 public:
-    AstNode *accept(CanInitVisitor *) override;
+    AstNode* accept(CanInitVisitor*) override;
     std::string toJson(int spaces) override;
 };
 

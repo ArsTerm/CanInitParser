@@ -2,11 +2,11 @@
 #define DEFINITIONNODE_H
 
 #include "../caninitlexer.h"
+#include "commentnode.h"
 #include "parsenode.h"
 
 namespace ciparser {
 class FuncDefNode;
-class CommentNode;
 
 class DefinitionNode : public ParseNode {
 public:
