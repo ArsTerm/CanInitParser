@@ -11,6 +11,8 @@ class Expr {
 public:
     virtual int eval() = 0;
     virtual std::optional<Id::UnwrapResult> linkId(Id::Set const&) = 0;
+    virtual void setSign(bool sign) = 0;
+    virtual Message::Type type() = 0;
 };
 
 class MessExpr final : public Expr {
@@ -33,6 +35,11 @@ public:
 
 private:
     Message mess;
+
+    // Expr interface
+public:
+    void setSign(bool sign) override;
+    Message::Type type() override;
 };
 
 class IdExpr final : public Expr {
@@ -55,6 +62,11 @@ public:
 
 private:
     Id* id;
+
+    // Expr interface
+public:
+    void setSign(bool sign) override;
+    Message::Type type() override;
 };
 
 class NumberExpr final : public Expr {
@@ -72,6 +84,11 @@ public:
 
 public:
     int value;
+
+    // Expr interface
+public:
+    void setSign(bool sign) override;
+    Message::Type type() override;
 };
 
 class BinaryExpr : public Expr {
@@ -95,6 +112,10 @@ public:
 protected:
     Expr* l;
     Expr* r;
+
+public:
+    void setSign(bool sign) override;
+    Message::Type type() override;
 };
 
 class SumExpr final : public BinaryExpr {

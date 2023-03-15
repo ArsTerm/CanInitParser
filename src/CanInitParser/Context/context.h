@@ -7,6 +7,8 @@
 
 namespace ciparser {
 class ValueHandle {
+    friend class Context;
+
 public:
     ValueHandle() = default;
 

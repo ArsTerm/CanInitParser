@@ -33,11 +33,6 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
     if (!m_data || dataSize == 0)
         return;
     setData(data, dataSize);
-
-    //    for (auto& id : ids) {
-    //        std::cout << "Id: " << id.first
-    //                  << ", value: " << typeid(*id.second).name() << '\n';
-    //    }
 }
 
 void Context::setData(BBFrame* data, size_t dataSize)

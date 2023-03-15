@@ -85,6 +85,11 @@ public:
         return (*((uint8_t*)m_data) >> m_bit) & 1;
     }
 
+    void setType(Type t)
+    {
+        m_type = t;
+    }
+
     UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
 
