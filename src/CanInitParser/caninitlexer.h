@@ -43,6 +43,14 @@ public:
         MoreOrEq,
         LShift,
         RShift,
+        CommentLine,
+        CommentBegin,
+        CommentEnd,
+        AttributeBegin,
+        AttributeEnd,
+        QuestionMark,
+        QuotationMark,
+        Apostrophe
     };
 
     static constexpr char const* typeToString(TokenType const& t)
@@ -87,8 +95,16 @@ public:
             TYPE_CASE(MoreOrEq)
             TYPE_CASE(LShift)
             TYPE_CASE(RShift)
+            TYPE_CASE(CommentLine)
+            TYPE_CASE(CommentBegin)
+            TYPE_CASE(CommentEnd)
+            TYPE_CASE(AttributeBegin)
+            TYPE_CASE(AttributeEnd)
+            TYPE_CASE(QuestionMark)
+            TYPE_CASE(QuotationMark)
+            TYPE_CASE(Apostrophe)
         default:
-            return "";
+            std::terminate();
         }
     }
 
@@ -171,8 +187,11 @@ private:
     void tokenizeDefine();
     void tokenizeId();
     void tokenizeNumber();
-    void skipCommentLine();
-    void skipBigComment();
+
+    static bool isCirillicAlpha(uint8_t val)
+    {
+        return val == 0xd0 || val == 0xd1;
+    }
 
     Token
     generate(TokenType type, std::string_view data, bool needOffsetData = true)

@@ -31,6 +31,8 @@ target_sources(
           Parser/structaccessnode.h
           Parser/binexprnode.cpp
           Parser/binexprnode.h
+          Parser/commentnode.h
+          Parser/commentnode.cpp
           Visitor/caninitvisitor.cpp
           Visitor/caninitvisitor.h
           Visitor/types/value.h

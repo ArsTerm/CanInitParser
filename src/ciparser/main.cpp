@@ -13,7 +13,9 @@ using namespace std;
 
 int main()
 {
-    auto file = "C:\\Projects\\CanInitParser\\CanInit.h";
+    auto file
+            = "C:\\Projects\\BlackBoxViewer\\external\\CanInitParser\\CanInit."
+              "h";
     auto f = fopen(file, "r");
     fseek(f, 0, SEEK_END);
     auto dataSize = ftell(f);
@@ -29,8 +31,12 @@ int main()
     //    auto str
     //            = "#define VAL 10\n"
     //              "#define VAL2 VAL\n"
-    //              "#define VAL3 VAL + VAL2\n"
-    //              "#define Frn can_mes.can_mes_char[20][7]";
+    //              "#define VAL3 VAL + VAL2 // @*type = signed*@ Value sum 10
+    //              +" "10\n"
+    //              "#define Frn can_mes.can_mes_char[20][7] /* @*type =
+    //              unsigned"
+    //              "*@ Is big comment\n"
+    //              "@*TransformAdd = 100*@ for Frn*/";
     //    auto dataSize = strlen(str);
 
     ciparser::CanInitParser parser(
@@ -39,7 +45,9 @@ int main()
     auto d = (ciparser::CanInitNode*)parser.parse();
 
     //   std::cout << "Tree root: " << d << std::endl;
-    //    std::cout << "Tree json:\n" << d->toJson(0);
+    std::cout << "Tree json:\n" << d->toJson(0) << std::endl;
+
+    return 0;
 
     ciparser::CanInitVisitor visitor;
 

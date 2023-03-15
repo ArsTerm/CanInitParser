@@ -13,7 +13,7 @@ void CanInitLexer::tokenize()
         return;
     }
 
-    while (*data == ' ') {
+    while (*data == ' ' || *data == '\t') {
         data++;
         charPosInLine++;
     }
@@ -37,18 +37,20 @@ void CanInitLexer::tokenize()
     case ']':
         token = generate(RSquare, std::string_view(data, 1));
         break;
+    case '?':
+        token = generate(QuestionMark, std::string_view(data, 1));
+        break;
+    case '"':
+        token = generate(QuotationMark, std::string_view(data, 1));
+        break;
+    case '\'':
+        token = generate(Apostrophe, std::string_view(data, 1));
+        break;
     case '/':
         if (*(data + 1) == '/') {
-            skipCommentLine();
-            token = generate(LineFeed, std::string_view(data - 1, 1), false);
+            token = generate(CommentLine, std::string_view(data, 2));
         } else if (*(data + 1) == '*') {
-            auto oldLine = line;
-            skipBigComment();
-            if (oldLine != line) {
-                token = generate(
-                        LineFeed, std::string_view(data - 1, 1), false);
-            } else
-                tokenize();
+            token = generate(CommentBegin, std::string_view(data, 2));
         } else {
             token = generate(LSlash, std::string_view(data, 1));
         }
@@ -115,8 +117,21 @@ void CanInitLexer::tokenize()
         else
             token = generate(Assign, std::string_view(data, 1));
         break;
+    case '@':
+        if (*(data + 1) == '*') {
+            token = generate(AttributeBegin, std::string_view(data, 2));
+        } else {
+            std::terminate();
+        }
+        break;
     case '*':
-        token = generate(Asterisk, std::string_view(data, 1));
+        if (*(data + 1) == '@') {
+            token = generate(AttributeEnd, std::string_view(data, 2));
+        } else if (*(data + 1) == '/') {
+            token = generate(CommentEnd, std::string_view(data, 2));
+        } else {
+            token = generate(Asterisk, std::string_view(data, 1));
+        }
         break;
     case '!':
         if (*(data + 1) == '=')
@@ -154,7 +169,7 @@ void CanInitLexer::tokenize()
         token = generate(Comma, std::string_view(data, 1));
         break;
     default:
-        if (isalpha(*data) || *data == '_')
+        if (isCirillicAlpha(*data) || std::isalpha(*data) || *data == '_')
             tokenizeId();
         else if (isdigit(*data))
             tokenizeNumber();
@@ -196,8 +211,13 @@ void CanInitLexer::tokenizeDefine()
 void CanInitLexer::tokenizeId()
 {
     auto begin = data;
+    if (isCirillicAlpha(*data))
+        data++;
     data++;
-    while (isalpha(*data) || isdigit(*data) || *data == '_') {
+    while (isCirillicAlpha(*data) || std::isalpha(*data) || isdigit(*data)
+           || *data == '_') {
+        if (isCirillicAlpha(*data))
+            data++;
         data++;
     }
     token = generate(Id, std::string_view(begin, data - begin), false);
@@ -216,7 +236,9 @@ void CanInitLexer::tokenizeNumber()
     }
 
     while (true) {
-        if (isdigit(*data)) {
+        if (isCirillicAlpha(*data)) {
+            break;
+        } else if (isdigit(*data)) {
             data++;
             continue;
         } else if (isHex) {
@@ -226,35 +248,7 @@ void CanInitLexer::tokenizeNumber()
                 continue;
             }
         }
-        assert(!isalpha(*data));
         break;
     }
     token = generate(Number, std::string_view(begin, data - begin), false);
-}
-
-void CanInitLexer::skipCommentLine()
-{
-    while (*data != '\n')
-        data++;
-    data++;
-    line++;
-    charPosInLine = 1;
-}
-
-void CanInitLexer::skipBigComment()
-{
-    data += 2;
-    while (std::string_view(data, 2) != "*/") {
-        if (*data == '\n') {
-            line++;
-            charPosInLine = 1;
-        }
-        data++;
-        charPosInLine++;
-    }
-    data += 2;
-    charPosInLine += 2;
-
-    std::cerr << "Skip big comment on: <" << line << ':' << charPosInLine
-              << "> " << '\n';
 }
