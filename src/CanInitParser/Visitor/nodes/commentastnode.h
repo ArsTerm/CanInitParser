@@ -2,6 +2,7 @@
 #define COMMENTASTNODE_H
 
 #include "astnode.h"
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -16,6 +17,8 @@ public:
     {
         return m_attributes;
     }
+
+    const std::string* attribute(std::string const& name) const;
 
     std::string const& comment() const
     {

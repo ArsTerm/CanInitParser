@@ -65,6 +65,7 @@ private:
     std::vector<Value> values;
     std::vector<Message> messages;
     Id::Set ids;
+    CommentAstNode* m_currentComment;
 
     Message* parseMessage(StructAccessAstNode*);
     Message* parseMessage(IndexAccessAstNode*);

@@ -92,6 +92,7 @@ public:
 
     UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
+    bool isSigned() const override;
 
     Message() = default;
 

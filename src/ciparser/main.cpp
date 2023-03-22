@@ -13,31 +13,28 @@ using namespace std;
 
 int main()
 {
-    auto file
-            = "C:\\Projects\\BlackBoxViewer\\external\\CanInitParser\\CanInit."
-              "h";
-    auto f = fopen(file, "r");
-    fseek(f, 0, SEEK_END);
-    auto dataSize = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    //    auto file
+    //            =
+    //            "C:\\Projects\\BlackBoxViewer\\external\\CanInitParser\\CanInit."
+    //              "h";
+    //    auto f = fopen(file, "r");
+    //    fseek(f, 0, SEEK_END);
+    //    auto dataSize = ftell(f);
+    //    fseek(f, 0, SEEK_SET);
 
-    auto str = new char[dataSize + 1];
-    str[dataSize] = '\0';
-    auto dsize = fread(str, 1, dataSize, f);
-    dataSize = dsize;
+    //    auto str = new char[dataSize + 1];
+    //    str[dataSize] = '\0';
+    //    auto dsize = fread(str, 1, dataSize, f);
+    //    dataSize = dsize;
 
     // ciparser::CanInitLexer lexer(str, dataSize);
 
-    //    auto str
-    //            = "#define VAL 10\n"
-    //              "#define VAL2 VAL\n"
-    //              "#define VAL3 VAL + VAL2 // @*type = signed*@ Value sum 10
-    //              +" "10\n"
-    //              "#define Frn can_mes.can_mes_char[20][7] /* @*type =
-    //              unsigned"
-    //              "*@ Is big comment\n"
-    //              "@*TransformAdd = 100*@ for Frn*/";
-    //    auto dataSize = strlen(str);
+    auto str
+            = "#define I_Can I_92frn // @* sign = signed *@\n"
+              "#define I_92frn can_mes.can_mes_char[62][0] // @* sign = "
+              "unsigned "
+              "*@\n";
+    auto dataSize = strlen(str);
 
     ciparser::CanInitParser parser(
             std::make_unique<ciparser::CanInitLexer>(str, dataSize));
@@ -46,8 +43,6 @@ int main()
 
     //   std::cout << "Tree root: " << d << std::endl;
     std::cout << "Tree json:\n" << d->toJson(0) << std::endl;
-
-    return 0;
 
     ciparser::CanInitVisitor visitor;
 

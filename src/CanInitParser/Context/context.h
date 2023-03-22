@@ -32,6 +32,11 @@ public:
         return expr->eval();
     }
 
+    Message::Type type() const
+    {
+        return expr->type();
+    }
+
     friend int operator*(ValueHandle const& val)
     {
         return val.get();

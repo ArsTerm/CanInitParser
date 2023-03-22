@@ -17,6 +17,12 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
         auto result = val.second->unwrap(ids_vals);
         if (result.index() == 0) {
             auto mess = std::get<0>(result);
+            if (val.second->isSigned()) {
+                if (mess->type() == Message::Uint8)
+                    mess->setType(Message::Int8);
+                else if (mess->type() == Message::Uint16)
+                    mess->setType(Message::Int16);
+            }
             linkMessage(mess);
             ids.emplace(val.first, new MessExpr(mess));
         } else if (result.index() == 1) {

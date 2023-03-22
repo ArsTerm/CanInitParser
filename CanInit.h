@@ -315,7 +315,7 @@
 #define I_FanSlow I72_frn // Ток вентилятора обдува фронт.печи медл
 #define I_WarmFloor I81_frn // Ток реле тёплого пола
 #define I_Washer I82_frn // Ток насоса стеклоомывателя
-#define I_Can I91_frn // Ток сигнала питание компрессора
+#define I_Can I91_frn // @*sign = unsigned*@ Ток сигнала питание компрессора
 // Тыл
 #define I_LampFog I11_tyl // Ток заднего противотуман
 #define I_FanD I12_tyl    // Ток вентилятора отопителя D

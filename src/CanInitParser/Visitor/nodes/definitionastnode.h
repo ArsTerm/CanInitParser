@@ -6,9 +6,11 @@
 namespace ciparser {
 class DefinitionAstNode : public AstNode {
 public:
-    std::string const attribute(std::string const& name);
+    DefinitionAstNode(CommentAstNode* comment);
+    std::string const& attribute(std::string const& name) const;
+    std::string const& comment() const;
 
 private:
-    std::unordered_map<std::string, std::string> m_attribs;
+    CommentAstNode* m_comment;
 };
 }
