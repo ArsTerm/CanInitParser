@@ -2,6 +2,7 @@
 #include "../caninitlexer.h"
 #include "binexprnode.h"
 #include "caninitnode.h"
+#include "commentnode.h"
 #include "definitionnode.h"
 #include "funccallnode.h"
 #include "funcdefnode.h"
@@ -159,6 +160,18 @@ ParseNode* CanInitParser::parse_p()
         return parseId();
     case TType::Eof:
         return nullptr;
+    case TType::CommentLine:
+        do {
+            updateToken();
+        } while (t.type != TType::LineFeed);
+        updateToken();
+        return parse_p();
+    case TType::CommentBegin:
+        do {
+            updateToken();
+        } while (t.type != TType::CommentEnd);
+        updateToken();
+        return parse_p();
     default:
         std::cerr << "Undefined token: " << std::string(t) << '\n';
         assert(false);
@@ -304,7 +317,9 @@ DefinitionNode* CanInitParser::parseDefinition()
     if (isFunctionDefinition()) {
         auto f = parseFuncDef();
         auto expr = parseExpression();
-        return new DefinitionNode(f, expr);
+        auto comment = parseComment();
+
+        return new DefinitionNode(f, expr, comment);
     } else {
         auto id = std::move(t);
         updateToken();
@@ -312,7 +327,9 @@ DefinitionNode* CanInitParser::parseDefinition()
             return new DefinitionNode(std::move(id));
 
         auto expr = parseExpression();
-        return new DefinitionNode(std::move(id), expr);
+        auto comment = parseComment();
+
+        return new DefinitionNode(std::move(id), expr, comment);
     }
 }
 
@@ -358,6 +375,54 @@ FuncDefNode* CanInitParser::parseFuncDef()
     return new FuncDefNode(id, std::move(params));
 }
 
+CommentNode* CanInitParser::parseComment()
+{
+    TType endType;
+    if (t.type == TType::CommentLine) {
+        endType = TType::LineFeed;
+    } else if (t.type == TType::CommentBegin) {
+        endType = TType::CommentEnd;
+    } else {
+        return nullptr;
+    }
+
+    std::unordered_map<std::string, std::string> attrs;
+    std::string comment;
+
+    do {
+        updateToken();
+
+        if (t.type == TType::AttributeBegin) {
+            updateToken();
+            if (t.type != TType::Id) {
+                std::terminate();
+            }
+            std::string attrName(t.data);
+            updateToken();
+            if (t.type != TType::Assign) {
+                std::terminate();
+            }
+            updateToken();
+            if (t.type != TType::Id && t.type != TType::Number) {
+                std::terminate();
+            }
+            std::string attrVal(t.data);
+            attrs.insert({attrName, attrVal});
+            updateToken();
+
+            if (t.type != TType::AttributeEnd) {
+                std::terminate();
+            }
+        } else if (t.type != TType::LineFeed && t.type != TType::CommentEnd) {
+            comment += " " + std::string(t.data);
+        }
+    } while (t.type != endType);
+
+    updateToken();
+
+    return new CommentNode(std::move(attrs), std::move(comment));
+}
+
 ParseNode* CanInitParser::parseExpression(TType endToken)
 {
     //    struct _Tmp {
@@ -375,7 +440,8 @@ ParseNode* CanInitParser::parseExpression(TType endToken)
     //        Token& t;
     //    } _(t);
 
-    while (t.type != TType::LineFeed && t.type != endToken) {
+    while (t.type != TType::LineFeed && t.type != TType::CommentLine
+           && t.type != TType::CommentBegin && t.type != endToken) {
         switch (t.type) {
         case TType::LParen: {
             pushBracket();

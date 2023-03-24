@@ -19,6 +19,7 @@ class ParseNode;
 class StructAccessNode;
 class FuncDefNode;
 class AstNode;
+class CommentNode;
 class BinExprAstNode;
 class CanInitAstNode;
 class DefinitionAstNode;
@@ -29,6 +30,7 @@ class NumberAstNode;
 class StructAccessAstNode;
 class IndexAccessAstNode;
 class NumberAstNode;
+class CommentAstNode;
 class Message;
 
 class CANINITPARSER_EXPORT CanInitVisitor {
@@ -46,6 +48,7 @@ public:
     NumberAstNode* visitNumber(NumberNode*);
     StructAccessAstNode* visitStructAccess(StructAccessNode*);
     FuncDefAstNode* visitFuncDef(FuncDefNode*);
+    CommentAstNode* visitCommentNode(CommentNode*);
 
     Id::Set&& move_ids()
     {
@@ -62,6 +65,7 @@ private:
     std::vector<Value> values;
     std::vector<Message> messages;
     Id::Set ids;
+    CommentAstNode* m_currentComment;
 
     Message* parseMessage(StructAccessAstNode*);
     Message* parseMessage(IndexAccessAstNode*);

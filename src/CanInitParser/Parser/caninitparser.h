@@ -18,6 +18,7 @@ class DefinitionNode;
 class NumberNode;
 class StructAccessNode;
 class FuncDefNode;
+class CommentNode;
 
 class CANINITPARSER_EXPORT CanInitParser {
     using Token = CanInitLexer::Token;
@@ -86,7 +87,7 @@ private:
     ParseNode* parse_p();
 
     FuncDefNode* parseFuncDef();
-
+    CommentNode* parseComment();
     ParseNode* parseExpression(TType end = TType::Eof);
     IdNode* parseId();
     NumberNode* parseNumber();

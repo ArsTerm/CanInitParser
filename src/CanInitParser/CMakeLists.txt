@@ -31,6 +31,8 @@ target_sources(
           Parser/structaccessnode.h
           Parser/binexprnode.cpp
           Parser/binexprnode.h
+          Parser/commentnode.h
+          Parser/commentnode.cpp
           Visitor/caninitvisitor.cpp
           Visitor/caninitvisitor.h
           Visitor/types/value.h
@@ -65,6 +67,8 @@ target_sources(
           Visitor/types/aliasmessage.h
           Visitor/types/id.h
           Visitor/types/id.cpp
+          Visitor/nodes/commentastnode.h
+          Visitor/nodes/commentastnode.cpp
           Context/context.h
           Context/context.cpp
           Context/types/bbdata.h

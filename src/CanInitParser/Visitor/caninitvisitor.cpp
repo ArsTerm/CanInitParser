@@ -13,6 +13,7 @@
 #include "nodes/astnode.h"
 #include "nodes/binexprastnode.h"
 #include "nodes/caninitastnode.h"
+#include "nodes/commentastnode.h"
 #include "nodes/definitionastnode.h"
 #include "nodes/funccallastnode.h"
 #include "nodes/funcdefastnode.h"
@@ -42,6 +43,12 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
 {
     auto id = n->id();
 
+    CommentAstNode* comment = nullptr;
+    if (n->comment()) {
+        comment = static_cast<CommentAstNode*>(n->comment()->accept(this));
+    }
+    m_currentComment = comment;
+
     if (n->funcDef()) {
         // To-do
         // auto func = n->funcDef()->accept(this);
@@ -50,13 +57,13 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
             return nullptr;
         auto expr = n->expr()->accept(this);
         if (auto node = dynamic_cast<BinExprAstNode*>(expr)) {
-            auto value = new Value(id, node->expr());
+            auto value = new Value(id, node->expr(), comment);
             ids.emplace(id, value);
         } else if (auto node = dynamic_cast<IdAstNode*>(expr)) {
-            auto alias = new Alias(id, node->getName());
+            auto alias = new Alias(id, node->getName(), comment);
             ids.emplace(id, alias);
         } else if (auto node = dynamic_cast<NumberAstNode*>(expr)) {
-            auto value = new Value(id, new NumberExpr(node->value()));
+            auto value = new Value(id, new NumberExpr(node->value()), comment);
             ids.emplace(id, value);
         } else if (auto node = dynamic_cast<StructAccessAstNode*>(expr)) {
             ids.emplace(id, parseMessage(node));
@@ -70,7 +77,7 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
         }
     }
 
-    return new DefinitionAstNode;
+    return new DefinitionAstNode(comment);
 }
 
 BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
@@ -86,7 +93,7 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
                 node->dependencies().begin(),
                 node->dependencies().end());
     } else if (auto id = dynamic_cast<IdAstNode*>(lNode)) {
-        auto alias = new Alias("", id->name());
+        auto alias = new Alias("", id->name(), m_currentComment);
         l = new IdExpr(alias);
         dependencies.emplace_back(id->getName());
     } else if (auto num = dynamic_cast<NumberAstNode*>(lNode)) {
@@ -109,7 +116,7 @@ BinExprAstNode* CanInitVisitor::visitBinExpr(BinExprNode* n)
                 node->dependencies().begin(),
                 node->dependencies().end());
     } else if (auto id = dynamic_cast<IdAstNode*>(rNode)) {
-        auto alias = new Alias("", id->name());
+        auto alias = new Alias("", id->name(), m_currentComment);
         r = new IdExpr(alias);
         dependencies.emplace_back(id->getName());
     } else if (auto num = dynamic_cast<NumberAstNode*>(rNode)) {
@@ -198,7 +205,7 @@ IndexAccessAstNode* CanInitVisitor::visitIndexAccess(IndexAccessNode* n)
     } else if (auto node = dynamic_cast<NumberAstNode*>(idxNode)) {
         idx = new NumberExpr(node->value());
     } else if (auto node = dynamic_cast<IdAstNode*>(idxNode)) {
-        idx = new IdExpr(new Alias("", node->getName()));
+        idx = new IdExpr(new Alias("", node->getName(), m_currentComment));
     } else {
         std::abort();
     }
@@ -223,6 +230,11 @@ StructAccessAstNode* CanInitVisitor::visitStructAccess(StructAccessNode* n)
 FuncDefAstNode* CanInitVisitor::visitFuncDef(FuncDefNode*)
 {
     return nullptr;
+}
+
+CommentAstNode* CanInitVisitor::visitCommentNode(CommentNode* n)
+{
+    return new CommentAstNode(n);
 }
 
 Message* CanInitVisitor::parseMessage(StructAccessAstNode* n)
@@ -309,9 +321,35 @@ Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
 
     Message::Type type;
     if (structNode->id() == "can_mes_char") {
-        type = Message::Int8;
+        if (!m_currentComment) {
+            type = Message::Uint8;
+        } else {
+            auto sign = m_currentComment->attribute("sign");
+            if (sign == nullptr)
+                type = Message::Uint8;
+            else if (*sign == "unsigned")
+                type = Message::Uint8;
+            else if (*sign == "signed")
+                type = Message::Int8;
+            else {
+                std::abort();
+            }
+        }
     } else if (structNode->id() == "can_mes_int") {
-        type = Message::Int16;
+        if (!m_currentComment) {
+            type = Message::Uint16;
+        } else {
+            auto sign = m_currentComment->attribute("sign");
+            if (sign == nullptr)
+                type = Message::Uint16;
+            else if (*sign == "unsigned")
+                type = Message::Uint16;
+            else if (*sign == "signed")
+                type = Message::Int16;
+            else {
+                std::abort();
+            }
+        }
     } else {
         std::abort();
     }

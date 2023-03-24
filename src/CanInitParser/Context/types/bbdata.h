@@ -12,22 +12,24 @@ struct BBTime {
 
     BBTime() = default;
     BBTime(BBTime const&) = default;
-    BBTime(BBTime const& base, int offset)
+    BBTime(int value)
     {
-        auto value = base.toTicks() + offset;
-        hour = value / (60 * 24 * 128);
-        value %= (60 * 24 * 128);
+        hour = value / (60 * 60 * 128);
+        value %= (60 * 60 * 128);
         minutes = value / (60 * 128);
         value %= (60 * 128);
         seconds = value / (128);
         value %= 128;
         ticks = value;
     }
+    BBTime(BBTime const& base, int offset) : BBTime(base.toTicks() + offset)
+    {
+    }
 
     time_t toTicks() const
     {
         return ticks + (seconds * 128) + (minutes * 60 * 128)
-                + (hour * 60 * 24 * 128);
+                + (hour * 60 * 60 * 128);
     }
 
     BBTime& operator=(BBTime const&) = default;

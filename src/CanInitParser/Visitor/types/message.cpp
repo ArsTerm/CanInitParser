@@ -10,4 +10,9 @@ std::string const& Message::name() const
 {
     return m_name;
 }
+
+bool Message::isSigned() const
+{
+    return m_type == Int8 || m_type == Int16;
+}
 }

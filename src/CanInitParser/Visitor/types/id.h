@@ -14,6 +14,7 @@ public:
     using UnwrapResult = std::variant<Message*, Value*>;
     virtual UnwrapResult unwrap(Set const& names) = 0;
     virtual std::string const& name() const = 0;
+    virtual bool isSigned() const = 0;
 
     virtual ~Id() = default;
 
