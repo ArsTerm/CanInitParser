@@ -55,6 +55,8 @@ public:
         return m_op;
     }
 
+    ~BinExprNode() override;
+
 private:
     ParseNode* m_l;
     ParseNode* m_r;

@@ -25,6 +25,8 @@ public:
         return m_expr;
     }
 
+    ~StructAccessNode() override;
+
 private:
     ParseNode* m_expr;
     ParseNode* m_id;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -10,7 +11,7 @@ class Message;
 class Value;
 class Id {
 public:
-    using Set = std::unordered_map<std::string, Id*>;
+    using Set = std::unordered_map<std::string, std::shared_ptr<Id>>;
     using UnwrapResult = std::variant<Message*, Value*>;
     virtual UnwrapResult unwrap(Set const& names) = 0;
     virtual std::string const& name() const = 0;

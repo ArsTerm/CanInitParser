@@ -24,13 +24,13 @@ Context::Context(BBFrame* data, size_t dataSize, Id::Set const& ids_vals)
                     mess->setType(Message::Int16);
             }
             linkMessage(mess);
-            ids.emplace(val.first, new MessExpr(mess));
+            ids.emplace(val.first, std::make_shared<MessExpr>(mess));
         } else if (result.index() == 1) {
             auto value = std::get<1>(result);
             if (auto bin = dynamic_cast<BinaryExpr*>(value->expr())) {
                 linkMessage(bin);
             }
-            ids.emplace(val.first, value->expr());
+            ids.emplace(val.first, value->moveExpr());
         } else {
             assert(false);
         }
@@ -53,7 +53,8 @@ void Context::setData(BBFrame* data, size_t dataSize)
     updateUntil(m_beginTime);
 }
 
-const std::unordered_map<std::string, Expr*>& Context::getIds() const
+const std::unordered_map<std::string, std::shared_ptr<Expr>>&
+Context::getIds() const
 {
     return ids;
 }

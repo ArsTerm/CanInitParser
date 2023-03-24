@@ -32,6 +32,8 @@ public:
         return m_expr;
     }
 
+    ~FuncCallNode() override;
+
 private:
     std::string m_id;
     std::vector<ParseNode*> m_expr;

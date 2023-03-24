@@ -25,6 +25,8 @@ public:
         return m_index;
     }
 
+    ~IndexAccessNode() override;
+
 private:
     ParseNode* m_expression = nullptr;
     ParseNode* m_index = nullptr;

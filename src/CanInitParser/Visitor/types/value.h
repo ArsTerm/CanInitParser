@@ -21,11 +21,14 @@ public:
         return m_expr;
     }
 
+    Expr* moveExpr();
+
     UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;
     bool isSigned() const override;
 
     Value(std::string_view id, Expr* expr, CommentAstNode* comment);
+    ~Value() override;
 
 private:
     std::string m_id;

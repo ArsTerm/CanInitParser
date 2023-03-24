@@ -66,7 +66,7 @@ public:
         if (it == ids.end()) {
             return ValueHandle();
         }
-        return ValueHandle(it->second);
+        return ValueHandle(it->second.get());
     }
 
     ValueHandle handle(int mes, int offset) const
@@ -94,7 +94,8 @@ public:
         return (end - 1)->time;
     }
 
-    std::unordered_map<std::string, Expr*> const& getIds() const;
+    std::unordered_map<std::string, std::shared_ptr<Expr>> const&
+    getIds() const;
 
 private:
     BBFrame* m_data;
@@ -102,7 +103,7 @@ private:
     size_t dataSize;
     size_t currentTick = 0;
     BBTime m_beginTime;
-    std::unordered_map<std::string, Expr*> ids;
+    std::unordered_map<std::string, std::shared_ptr<Expr>> ids;
     CanMes canMes = {};
 
     void linkMessage(Message* m);

@@ -13,6 +13,7 @@ public:
     virtual std::optional<Id::UnwrapResult> linkId(Id::Set const&) = 0;
     virtual void setSign(bool sign) = 0;
     virtual Message::Type type() = 0;
+    virtual ~Expr() = default;
 };
 
 class MessExpr final : public Expr {
@@ -108,6 +109,7 @@ public:
     }
 
     std::optional<Id::UnwrapResult> linkId(Id::Set const& set) override;
+    ~BinaryExpr() override;
 
 protected:
     Expr* l;
