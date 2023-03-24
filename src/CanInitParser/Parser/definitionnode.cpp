@@ -4,9 +4,16 @@
 #include "commentnode.h"
 #include "funcdefnode.h"
 
-using ciparser::DefinitionNode;
+namespace ciparser {
 
-ciparser::AstNode* ciparser::DefinitionNode::accept(CanInitVisitor* v)
+DefinitionNode::~DefinitionNode()
+{
+    delete m_funcDef;
+    delete m_comment;
+    delete m_expr;
+}
+
+ciparser::AstNode* DefinitionNode::accept(CanInitVisitor* v)
 {
     return v->visitDefinition(this);
 }
@@ -43,4 +50,6 @@ std::string DefinitionNode::toJson(int spaces)
         result += "}";
     }
     return result;
+}
+
 }

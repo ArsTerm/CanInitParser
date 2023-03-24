@@ -2,9 +2,15 @@
 #include "../Visitor/caninitvisitor.h"
 #include "../Visitor/nodes/structaccessastnode.h"
 
-using ciparser::StructAccessNode;
+namespace ciparser {
 
-ciparser::AstNode* ciparser::StructAccessNode::accept(CanInitVisitor* v)
+StructAccessNode::~StructAccessNode()
+{
+    delete m_expr;
+    delete m_id;
+}
+
+AstNode* StructAccessNode::accept(CanInitVisitor* v)
 {
     return v->visitStructAccess(this);
 }
@@ -27,4 +33,6 @@ std::string StructAccessNode::toJson(int spaces)
     result += '}';
 
     return result;
+}
+
 }

@@ -2,12 +2,20 @@
 #include "../Visitor/caninitvisitor.h"
 #include "../Visitor/nodes/funccallastnode.h"
 
-ciparser::AstNode* ciparser::FuncCallNode::accept(CanInitVisitor* v)
+namespace ciparser {
+
+FuncCallNode::~FuncCallNode()
+{
+    for (auto arg : m_expr)
+        delete arg;
+}
+
+AstNode* FuncCallNode::accept(CanInitVisitor* v)
 {
     return v->visitFuncCall(this);
 }
 
-std::string ciparser::FuncCallNode::toJson(int spaces)
+std::string FuncCallNode::toJson(int spaces)
 {
     std::string result;
     fillString(result, spaces, "    ");
@@ -26,4 +34,6 @@ std::string ciparser::FuncCallNode::toJson(int spaces)
     fillString(result, spaces - 1, "    ");
     result += '}';
     return result;
+}
+
 }

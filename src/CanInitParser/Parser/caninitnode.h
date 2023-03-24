@@ -18,6 +18,8 @@ public:
         return m_childrens;
     }
 
+    ~CanInitNode() override;
+
 private:
     std::vector<ParseNode*> m_childrens;
 

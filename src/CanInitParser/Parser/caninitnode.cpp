@@ -2,12 +2,20 @@
 #include "../Visitor/caninitvisitor.h"
 #include "../Visitor/nodes/caninitastnode.h"
 
-ciparser::AstNode* ciparser::CanInitNode::accept(CanInitVisitor* v)
+namespace ciparser {
+
+CanInitNode::~CanInitNode()
+{
+    for (auto child : m_childrens)
+        delete child;
+}
+
+ciparser::AstNode* CanInitNode::accept(CanInitVisitor* v)
 {
     return v->visitCanInit(this);
 }
 
-std::string ciparser::CanInitNode::toJson(int spaces)
+std::string CanInitNode::toJson(int spaces)
 {
     std::string result;
     fillString(result, spaces, "    ");
@@ -19,4 +27,6 @@ std::string ciparser::CanInitNode::toJson(int spaces)
     fillString(result, spaces, "    ");
     result += "}";
     return result;
+}
+
 }

@@ -57,14 +57,15 @@ DefinitionAstNode* CanInitVisitor::visitDefinition(DefinitionNode* n)
             return nullptr;
         auto expr = n->expr()->accept(this);
         if (auto node = dynamic_cast<BinExprAstNode*>(expr)) {
-            auto value = new Value(id, node->expr(), comment);
-            ids.emplace(id, value);
+            ids.emplace(id, std::make_shared<Value>(id, node->expr(), comment));
         } else if (auto node = dynamic_cast<IdAstNode*>(expr)) {
-            auto alias = new Alias(id, node->getName(), comment);
-            ids.emplace(id, alias);
+            ids.emplace(
+                    id, std::make_shared<Alias>(id, node->getName(), comment));
         } else if (auto node = dynamic_cast<NumberAstNode*>(expr)) {
-            auto value = new Value(id, new NumberExpr(node->value()), comment);
-            ids.emplace(id, value);
+            ids.emplace(
+                    id,
+                    std::make_shared<Value>(
+                            id, new NumberExpr(node->value()), comment));
         } else if (auto node = dynamic_cast<StructAccessAstNode*>(expr)) {
             ids.emplace(id, parseMessage(node));
         } else if (auto node = dynamic_cast<IndexAccessAstNode*>(expr)) {
@@ -176,7 +177,7 @@ CanInitAstNode* CanInitVisitor::visitCanInit(CanInitNode* n)
     }
 
     for (auto& id : ids) {
-        if (auto value = dynamic_cast<Value*>(id.second)) {
+        if (auto value = dynamic_cast<Value*>(id.second.get())) {
             value->expr()->linkId(ids);
         }
     }
@@ -290,7 +291,7 @@ Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
     if (auto id = dynamic_cast<IdExpr*>(n->index())) {
         auto it = ids.find(((Alias*)(id->getId()))->getLinkName());
         assert(it != ids.end());
-        auto value = dynamic_cast<Value*>(it->second);
+        auto value = dynamic_cast<Value*>(it->second.get());
         assert(value);
         byte = value->expr()->eval();
     } else {
@@ -310,7 +311,7 @@ Message* CanInitVisitor::parseMessage(IndexAccessAstNode* n)
     if (auto id = dynamic_cast<IdExpr*>(idx->index())) {
         auto it = ids.find(((Alias*)(id->getId()))->getLinkName());
         assert(it != ids.end());
-        auto value = dynamic_cast<Value*>(it->second);
+        auto value = dynamic_cast<Value*>(it->second.get());
         assert(value);
         messId = value->expr()->eval();
     } else {

@@ -31,6 +31,12 @@ std::optional<Id::UnwrapResult> BinaryExpr::linkId(Id::Set const& set)
     return std::nullopt;
 }
 
+BinaryExpr::~BinaryExpr()
+{
+    delete r;
+    delete l;
+}
+
 int MessExpr::eval()
 {
     if (mess.type() == Message::Bit)

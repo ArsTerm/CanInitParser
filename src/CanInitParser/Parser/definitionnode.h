@@ -50,6 +50,8 @@ public:
         return m_comment;
     }
 
+    ~DefinitionNode() override;
+
 private:
     std::string m_id;
     FuncDefNode* m_funcDef = nullptr;

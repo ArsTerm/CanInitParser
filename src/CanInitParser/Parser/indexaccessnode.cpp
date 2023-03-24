@@ -2,9 +2,15 @@
 #include "../Visitor/caninitvisitor.h"
 #include "../Visitor/nodes/indexaccessastnode.h"
 
-using ciparser::IndexAccessNode;
+namespace ciparser {
 
-ciparser::AstNode* ciparser::IndexAccessNode::accept(CanInitVisitor* v)
+IndexAccessNode::~IndexAccessNode()
+{
+    delete m_expression;
+    delete m_index;
+}
+
+AstNode* IndexAccessNode::accept(CanInitVisitor* v)
 {
     return v->visitIndexAccess(this);
 }
@@ -27,4 +33,6 @@ std::string IndexAccessNode::toJson(int spaces)
     result += '}';
 
     return result;
+}
+
 }

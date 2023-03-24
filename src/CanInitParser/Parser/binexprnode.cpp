@@ -3,6 +3,12 @@
 #include "../Visitor/nodes/binexprastnode.h"
 #include "../caninitlexer.h"
 
+ciparser::BinExprNode::~BinExprNode()
+{
+    delete m_l;
+    delete m_r;
+}
+
 ciparser::AstNode* ciparser::BinExprNode::accept(CanInitVisitor* v)
 {
     return v->visitBinExpr(this);
