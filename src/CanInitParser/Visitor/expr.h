@@ -25,6 +25,11 @@ public:
         return &mess;
     }
 
+    Message const* message() const
+    {
+        return &mess;
+    }
+
     std::optional<Id::UnwrapResult> linkId(Id::Set const&) override
     {
         return std::nullopt;

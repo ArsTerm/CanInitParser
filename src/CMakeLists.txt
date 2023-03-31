@@ -1,2 +1,3 @@
 add_subdirectory(CanInitParser)
 add_subdirectory(ciparser)
+add_subdirectory(CanInitCompiler)

@@ -3,8 +3,14 @@
 #include "id.h"
 #include <string>
 
+namespace cicompiler {
+class Compiler;
+}
+
 namespace ciparser {
 class Message : public Id {
+    friend class cicompiler::Compiler;
+
 public:
     enum Type { Int8, Uint8, Int16, Uint16, Bit };
 

@@ -3,11 +3,17 @@
 #include "id.h"
 #include <string>
 
+namespace cicompiler {
+class Compiler;
+}
+
 namespace ciparser {
 class Message;
 class CommentAstNode;
 
 class Alias : public Id {
+    friend class cicompiler::Compiler;
+
 public:
     UnwrapResult unwrap(Set const&) override;
     std::string const& name() const override;

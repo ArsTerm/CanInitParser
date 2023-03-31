@@ -14,4 +14,6 @@ function(set_compile_options target_name)
             target_compile_options(${target_name} PRIVATE -Wall -Wextra -Wpedantic -g2)
         endif()
     endif()
+
+    target_compile_definitions(${target_name} PRIVATE _CRT_SECURE_NO_WARNINGS)
 endfunction()

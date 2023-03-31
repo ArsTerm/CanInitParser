@@ -4,12 +4,18 @@
 #include <string>
 #include <vector>
 
+namespace cicompiler {
+class Compiler;
+}
+
 namespace ciparser {
 class Message;
 class Expr;
 class CommentAstNode;
 
 class Value : public Id {
+    friend class cicompiler::Compiler;
+
 public:
     std::string const& id() const
     {
