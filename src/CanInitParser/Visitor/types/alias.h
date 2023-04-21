@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../CanInitParser_global.h"
 #include "id.h"
 #include <string>
 
@@ -11,7 +12,7 @@ namespace ciparser {
 class Message;
 class CommentAstNode;
 
-class Alias : public Id {
+class CANINITPARSER_EXPORT Alias : public Id {
     friend class cicompiler::Compiler;
 
 public:

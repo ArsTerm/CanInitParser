@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../CanInitParser_global.h"
 #include "types/message.h"
 #include <cassert>
 #include <optional>
@@ -7,7 +8,7 @@
 #include <unordered_map>
 
 namespace ciparser {
-class Expr {
+class CANINITPARSER_EXPORT Expr {
 public:
     virtual int eval() = 0;
     virtual std::optional<Id::UnwrapResult> linkId(Id::Set const&) = 0;
@@ -16,7 +17,7 @@ public:
     virtual ~Expr() = default;
 };
 
-class MessExpr final : public Expr {
+class CANINITPARSER_EXPORT MessExpr final : public Expr {
 public:
     int eval() override;
 
@@ -48,7 +49,7 @@ public:
     Message::Type type() override;
 };
 
-class IdExpr final : public Expr {
+class CANINITPARSER_EXPORT IdExpr final : public Expr {
 public:
     int eval() override;
 
@@ -75,7 +76,7 @@ public:
     Message::Type type() override;
 };
 
-class NumberExpr final : public Expr {
+class CANINITPARSER_EXPORT NumberExpr final : public Expr {
 public:
     int eval() override;
 
@@ -97,7 +98,7 @@ public:
     Message::Type type() override;
 };
 
-class BinaryExpr : public Expr {
+class CANINITPARSER_EXPORT BinaryExpr : public Expr {
 public:
     BinaryExpr(Expr* l, Expr* r) : l(l), r(r)
     {
@@ -112,6 +113,8 @@ public:
     {
         return r;
     }
+
+    virtual char const* opName() const = 0;
 
     std::optional<Id::UnwrapResult> linkId(Id::Set const& set) override;
     ~BinaryExpr() override;
@@ -132,6 +135,8 @@ public:
     SumExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class SubExpr final : public BinaryExpr {
@@ -141,6 +146,8 @@ public:
     SubExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class MulExpr final : public BinaryExpr {
@@ -150,6 +157,8 @@ public:
     MulExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class DivExpr final : public BinaryExpr {
@@ -159,6 +168,8 @@ public:
     DivExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class AndBinExpr final : public BinaryExpr {
@@ -168,6 +179,8 @@ public:
     AndBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class OrBinExpr final : public BinaryExpr {
@@ -177,6 +190,8 @@ public:
     OrBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class AndLogicExpr final : public BinaryExpr {
@@ -186,6 +201,8 @@ public:
     AndLogicExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class OrLogicExpr final : public BinaryExpr {
@@ -195,6 +212,8 @@ public:
     OrLogicExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 
 class EqBinExpr final : public BinaryExpr {
@@ -204,5 +223,7 @@ public:
     EqBinExpr(Expr* l, Expr* r) : BinaryExpr(l, r)
     {
     }
+
+    const char* opName() const override;
 };
 }

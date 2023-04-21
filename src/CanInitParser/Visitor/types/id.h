@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../CanInitParser_global.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -9,7 +10,7 @@
 namespace ciparser {
 class Message;
 class Value;
-class Id {
+class CANINITPARSER_EXPORT Id {
 public:
     using Set = std::unordered_map<std::string, std::shared_ptr<Id>>;
     using UnwrapResult = std::variant<Message*, Value*>;

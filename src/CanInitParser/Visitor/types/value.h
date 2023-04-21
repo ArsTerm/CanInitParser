@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../CanInitParser_global.h"
 #include "id.h"
 #include <string>
 #include <vector>
@@ -13,7 +14,7 @@ class Message;
 class Expr;
 class CommentAstNode;
 
-class Value : public Id {
+class CANINITPARSER_EXPORT Value : public Id {
     friend class cicompiler::Compiler;
 
 public:

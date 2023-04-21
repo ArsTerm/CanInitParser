@@ -193,4 +193,49 @@ Message::Type ciparser::BinaryExpr::type()
     return typeSize(lt) > typeSize(rt) ? lt : rt;
 }
 
+const char* SumExpr::opName() const
+{
+    return "+";
+}
+
+const char* SubExpr::opName() const
+{
+    return "-";
+}
+
+const char* MulExpr::opName() const
+{
+    return "*";
+}
+
+const char* DivExpr::opName() const
+{
+    return "/";
+}
+
+const char* AndBinExpr::opName() const
+{
+    return "&";
+}
+
+const char* OrBinExpr::opName() const
+{
+    return "|";
+}
+
+const char* AndLogicExpr::opName() const
+{
+    return "&&";
+}
+
+const char* OrLogicExpr::opName() const
+{
+    return "||";
+}
+
+const char* EqBinExpr::opName() const
+{
+    return "==";
+}
+
 }

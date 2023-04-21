@@ -16,4 +16,9 @@ const std::string& AliasMessage::name() const
     return m_name;
 }
 
+const Message* AliasMessage::message() const
+{
+    return mess;
+}
+
 }

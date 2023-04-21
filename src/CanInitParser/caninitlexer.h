@@ -193,18 +193,20 @@ private:
         return val == 0xd0 || val == 0xd1;
     }
 
-    Token
-    generate(TokenType type, std::string_view data, bool needOffsetData = true)
+    Token generate(
+            TokenType type,
+            std::string_view currData,
+            bool needOffsetData = true)
     {
         Token t;
         t.type = type;
-        t.data = data;
+        t.data = currData;
         t.charPosInLine = charPosInLine;
         t.line = line;
 
-        charPosInLine += data.size();
+        charPosInLine += (int)currData.size();
         if (needOffsetData)
-            this->data += data.size();
+            this->data += currData.size();
 
         return t;
     }
