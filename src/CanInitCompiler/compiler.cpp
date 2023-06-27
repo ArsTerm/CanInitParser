@@ -44,24 +44,22 @@ int Compiler::compile(std::string_view inFile, std::string_view outFile)
 std::optional<std::pair<void*, size_t>>
 Compiler::readFile(std::string_view file)
 {
-    auto f = fopen(file.data(), "rb");
-    if (!f)
+    QFile f(file.data());
+
+    if (!f.open(QFile::WriteOnly)) {
         return std::nullopt;
+    }
 
-    fseek(f, 0, SEEK_END);
-    auto fSize = ftell(f);
-    fseek(f, 0, SEEK_SET);
-
-    auto data = new char[fSize];
-    fread(data, 1, fSize, f);
-    fclose(f);
+    auto fSize = f.size();
+    auto data = f.map(0, fSize);
 
     return std::make_pair(data, (size_t)fSize);
 }
 
 void Compiler::freeFile(void* data)
 {
-    delete[](char*) data;
+    QFile f;
+    f.unmap((uchar*)data);
 }
 
 QJsonObject exprToJson(ciparser::Expr* expr)

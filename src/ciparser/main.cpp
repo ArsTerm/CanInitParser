@@ -13,10 +13,9 @@ using namespace std;
 
 int main()
 {
-    //    auto file
-    //            =
-    //            "C:\\Projects\\BlackBoxViewer\\external\\CanInitParser\\CanInit."
-    //              "h";
+    auto file
+            = "C:\\Projects\\BlackBoxViewer\\external\\CanInitParser\\CanInit."
+              "h";
     //    auto f = fopen(file, "r");
     //    fseek(f, 0, SEEK_END);
     //    auto dataSize = ftell(f);
